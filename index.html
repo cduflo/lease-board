@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lease Board — Fall 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDEEEA; --paper2:#E4E6DF; --card:#F6F7F3;
+  --ink:#14171A; --ink2:#59605A; --ink3:#878E86;
+  --rule:#B7BCB2; --rule2:#D2D6CE;
+  --ev:#1F6F5C; --phev:#3A5A8C; --star:#9A7514;
+  --flag:#8C3A28;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'Barlow',system-ui,sans-serif; font-size:15px; line-height:1.45;
+}
+a{color:inherit}
+.wrap{max-width:1360px;margin:0 auto;padding:0 20px 80px}
+
+/* ---------- masthead: window-sticker vernacular ---------- */
+.sticker{border:3px solid var(--ink);border-top:none;background:var(--card)}
+.sticker-top{
+  background:var(--ink);color:var(--paper);
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;
+  padding:9px 16px;
+}
+.sticker-top .mark{
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:19px;letter-spacing:.16em;text-transform:uppercase;
+}
+.sticker-top .sub{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;
+  letter-spacing:.09em;color:#A9B0A6;text-transform:uppercase;
+}
+.sticker-body{display:flex;flex-wrap:wrap;gap:0}
+.cell{padding:14px 18px;border-right:1px solid var(--rule);flex:1 1 180px;min-width:150px}
+.cell:last-child{border-right:none}
+.cell .k{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink2);margin-bottom:5px;
+}
+.cell .v{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;line-height:1}
+.cell .v small{font-size:14px;font-weight:500;color:var(--ink2);margin-left:3px}
+.cell .note{font-size:12.5px;color:var(--ink2);margin-top:5px;line-height:1.35}
+
+/* ---------- controls ---------- */
+.controls{
+  position:sticky;top:0;z-index:30;background:var(--paper);
+  border-bottom:2px solid var(--ink);padding:12px 0 13px;margin-bottom:0;
+}
+.ctl-row{display:flex;flex-wrap:wrap;gap:16px 22px;align-items:flex-end}
+.grp{display:flex;flex-direction:column;gap:5px}
+.grp>label{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink2);
+}
+.seg{display:flex;border:1.5px solid var(--ink);background:var(--card)}
+.seg button{
+  font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;
+  letter-spacing:.05em;text-transform:uppercase;
+  padding:6px 13px;border:none;border-right:1px solid var(--rule);
+  background:transparent;color:var(--ink2);cursor:pointer;white-space:nowrap;
+}
+.seg button:last-child{border-right:none}
+.seg button:hover{background:var(--paper2);color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button[aria-pressed="true"][data-v="EV"]{background:var(--ev)}
+.seg button[aria-pressed="true"][data-v="PHEV"]{background:var(--phev)}
+input[type="search"],select{
+  font-family:'Barlow',sans-serif;font-size:14px;padding:6px 10px;
+  border:1.5px solid var(--ink);background:var(--card);color:var(--ink);
+}
+input[type="search"]{width:190px}
+input[type="range"]{width:170px;accent-color:var(--ink)}
+.rangeval{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink2)}
+.chk{display:flex;align-items:center;gap:7px;font-size:14px;cursor:pointer;padding-bottom:6px}
+.chk input{accent-color:var(--ink);width:15px;height:15px}
+.reset{
+  font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;
+  letter-spacing:.05em;text-transform:uppercase;padding:6px 13px;
+  border:1.5px solid var(--ink2);background:transparent;color:var(--ink2);cursor:pointer;
+}
+.reset:hover{border-color:var(--ink);color:var(--ink)}
+.tally{
+  font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;
+  color:var(--ink2);padding:9px 0 0;
+}
+.tally b{color:var(--ink)}
+
+/* ---------- table ---------- */
+.scroller{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:1080px}
+thead th{
+  position:sticky;top:0;background:var(--paper2);
+  font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--ink2);
+  text-align:left;padding:9px 10px;border-bottom:2px solid var(--ink);
+  white-space:nowrap;
+}
+thead th.sortable{cursor:pointer;user-select:none}
+thead th.sortable:hover{color:var(--ink)}
+thead th .arrow{opacity:0;margin-left:3px}
+thead th[data-dir] .arrow{opacity:1;color:var(--ink)}
+tbody td{padding:8px 10px;border-bottom:1px solid var(--rule2);vertical-align:middle}
+tbody tr:hover{background:var(--card)}
+tbody tr.hidden-row{opacity:.4}
+tbody tr.starred td:first-child{box-shadow:inset 3px 0 0 var(--star)}
+
+.iconbtn{
+  border:none;background:none;cursor:pointer;font-size:16px;line-height:1;
+  padding:3px 4px;color:var(--ink3);border-radius:2px;
+}
+.iconbtn:hover{color:var(--ink);background:var(--paper2)}
+.iconbtn.on{color:var(--star)}
+.iconbtn.off-on{color:var(--flag)}
+
+.vname{font-weight:600;font-size:15px;text-decoration:none;border-bottom:1px solid var(--rule)}
+.vname:hover{border-bottom-color:var(--ink)}
+.vname .ext{font-size:10px;color:var(--ink3);margin-left:4px;vertical-align:2px}
+.brand{
+  display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);margin-top:2px;
+}
+.tag{
+  display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:11.5px;letter-spacing:.1em;padding:2px 7px;color:#fff;
+}
+.tag.EV{background:var(--ev)}
+.tag.PHEV{background:var(--phev)}
+.num{font-family:'IBM Plex Mono',monospace;font-size:13.5px;white-space:nowrap}
+.num .est{color:var(--ink3);font-size:10px}
+.status{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);white-space:nowrap}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.dot.now{background:var(--ev)}.dot.fall{background:#B98A1E}.dot.clear{background:var(--flag)}
+
+/* signature: cargo bar against the ID.4 baseline */
+.cargo{display:flex;align-items:center;gap:9px;min-width:190px}
+.bar{position:relative;flex:1;height:14px;background:var(--paper2);border:1px solid var(--rule2)}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;background:var(--ink3)}
+.bar .fill.over{background:var(--ev)}
+.bar .fill.under{background:var(--ink3)}
+.bar .fill.way-under{background:#C4A0A0}
+.bar .base{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.cargo .cn{font-family:'IBM Plex Mono',monospace;font-size:12.5px;width:44px;text-align:right}
+.glyph{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:-1px;white-space:nowrap}
+.glyph.up{color:var(--ev)}.glyph.down{color:var(--flag)}.glyph.even{color:var(--ink2)}
+
+.yes{color:var(--ev);font-weight:600}
+.no{color:var(--ink3)}
+.part{color:#8A6A12;font-size:12.5px}
+
+.empty{padding:60px 20px;text-align:center;color:var(--ink2)}
+.empty b{display:block;font-family:'Barlow Condensed',sans-serif;font-size:24px;color:var(--ink);margin-bottom:6px}
+
+.legend{
+  margin-top:26px;border-top:1px solid var(--rule);padding-top:16px;
+  display:flex;flex-wrap:wrap;gap:26px;font-size:13px;color:var(--ink2);
+}
+.legend h4{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;margin:0 0 6px;color:var(--ink);font-weight:600;
+}
+.legend ul{margin:0;padding-left:16px}
+.legend li{margin-bottom:3px}
+.warnbar{
+  background:#F3E4C8;border:1.5px solid #B98A1E;padding:9px 14px;margin:14px 0 0;
+  font-size:13px;
+}
+@media(max-width:720px){
+  .cell{flex:1 1 50%}
+  input[type="search"]{width:150px}
+  .wrap{padding:0 12px 60px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="sticker">
+    <div class="sticker-top">
+      <span class="mark">Fall 2026 Lease Board</span>
+      <span class="sub">36-month terms · West Hartford, CT · compiled 24 Jul 2026</span>
+    </div>
+    <div class="sticker-body">
+      <div class="cell">
+        <div class="k">Vehicles tracked</div>
+        <div class="v" id="statTotal">—</div>
+        <div class="note">Electric and plug-in hybrid SUVs leasable this fall.</div>
+      </div>
+      <div class="cell">
+        <div class="k">Cargo baseline</div>
+        <div class="v">64.2<small>cu ft</small></div>
+        <div class="note">VW ID.4, seats folded. Every bar below is measured against this line.</div>
+      </div>
+      <div class="cell">
+        <div class="k">Federal credit</div>
+        <div class="v">$0</div>
+        <div class="note">Ended 30 Sep 2025. Everything here is manufacturer-subvented.</div>
+      </div>
+      <div class="cell">
+        <div class="k">CT CHEAPR</div>
+        <div class="v">$1,000<small>BEV</small></div>
+        <div class="note">$500 PHEV. $50k MSRP cap, eligible-list only, applies to leases 24mo+.</div>
+      </div>
+    </div>
+  </header>
+
+  <div id="storeWarn" class="warnbar" hidden>
+    Stars and hides won't persist here — browser storage is blocked in this preview. Download the file and open it directly and they'll stick.
+  </div>
+
+  <div class="controls">
+    <div class="ctl-row">
+      <div class="grp">
+        <label>Powertrain</label>
+        <div class="seg" id="segType">
+          <button data-v="all" aria-pressed="true">All</button>
+          <button data-v="EV" aria-pressed="false">EV</button>
+          <button data-v="PHEV" aria-pressed="false">PHEV</button>
+        </div>
+      </div>
+      <div class="grp">
+        <label>Availability</label>
+        <div class="seg" id="segStatus">
+          <button data-v="all" aria-pressed="true">All</button>
+          <button data-v="now" aria-pressed="false">Now</button>
+          <button data-v="fall" aria-pressed="false">Fall</button>
+          <button data-v="clear" aria-pressed="false">Clearance</button>
+        </div>
+      </div>
+      <div class="grp">
+        <label>Rows</label>
+        <div class="seg" id="segRows">
+          <button data-v="all" aria-pressed="true">All</button>
+          <button data-v="2" aria-pressed="false">2-row</button>
+          <button data-v="3" aria-pressed="false">3-row</button>
+        </div>
+      </div>
+      <div class="grp">
+        <label for="fPrice">Max $/mo · <span class="rangeval" id="priceOut">any</span></label>
+        <input type="range" id="fPrice" min="250" max="2000" step="25" value="2000">
+      </div>
+      <div class="grp">
+        <label for="fCargo">Min cargo · <span class="rangeval" id="cargoOut">any</span></label>
+        <input type="range" id="fCargo" min="30" max="120" step="5" value="30">
+      </div>
+      <div class="grp">
+        <label for="fSearch">Search</label>
+        <input type="search" id="fSearch" placeholder="model or brand" autocomplete="off">
+      </div>
+      <label class="chk"><input type="checkbox" id="fCheapr"> CHEAPR only</label>
+      <label class="chk"><input type="checkbox" id="fStar"> Starred only</label>
+      <label class="chk"><input type="checkbox" id="fHidden"> Show hidden</label>
+      <button class="reset" id="btnReset">Reset filters</button>
+    </div>
+    <div class="tally" id="tally"></div>
+  </div>
+
+  <div class="scroller">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:34px"></th>
+          <th style="width:34px"></th>
+          <th class="sortable" data-sort="name">Vehicle <span class="arrow">▼</span></th>
+          <th class="sortable" data-sort="type">Type <span class="arrow">▼</span></th>
+          <th class="sortable" data-sort="rows">Rows <span class="arrow">▼</span></th>
+          <th class="sortable" data-sort="price">$/mo · 36 <span class="arrow">▼</span></th>
+          <th class="sortable" data-sort="evRange">EV mi <span class="arrow">▼</span></th>
+          <th class="sortable" data-sort="cargo">Cargo vs ID.4 <span class="arrow">▼</span></th>
+          <th class="sortable" data-sort="cheapr">CHEAPR <span class="arrow">▼</span></th>
+          <th class="sortable" data-sort="status">Status <span class="arrow">▼</span></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <div class="empty" id="empty" hidden><b>Nothing matches</b>Loosen a filter or reset.</div>
+
+  <div class="legend">
+    <div>
+      <h4>Reading the numbers</h4>
+      <ul>
+        <li><b>$/mo</b> assumes ~$3–6k due at signing, 10k mi/yr.</li>
+        <li><b>est.</b> means no published 36-month offer — either a 24/39/48-month term converted, or 1.0–1.45% of MSRP for unlaunched models.</li>
+        <li><b>Cargo</b> is max cu ft, all rear seats folded. Values with ~ are unverified.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>CHEAPR reality check</h4>
+      <ul>
+        <li>$50,000 MSRP cap. Point-of-sale only, no retroactive claims.</li>
+        <li>The eligible list was last updated Sep 2025 — Ioniq 9, EV9, Optiq, Trailseeker and others aren't on it yet.</li>
+        <li>Dealer participation is voluntary; funds are first-come.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Not here on purpose</h4>
+      <ul>
+        <li>Discontinued: Acura ZDX, Nissan Ariya, Tesla Model X, Audi Q8 e-tron, Mercedes EQB, Polestar 2.</li>
+        <li>All Stellantis PHEVs ended with MY2026 — Wrangler 4xe, Grand Cherokee 4xe, Hornet R/T, Tonale.</li>
+        <li>Kia Niro PHEV gone. Crosstrek Hybrid is no longer a plug-in.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- storage with graceful fallback ---------- */
+const store = (() => {
+  let mem = {}, ok = true;
+  try { localStorage.setItem('__t','1'); localStorage.removeItem('__t'); }
+  catch(e){ ok = false; }
+  return {
+    ok,
+    get(k){ try { return ok ? localStorage.getItem(k) : (mem[k] ?? null); } catch(e){ return mem[k] ?? null; } },
+    set(k,v){ try { if(ok) localStorage.setItem(k,v); else mem[k]=v; } catch(e){ mem[k]=v; } }
+  };
+})();
+if(!store.ok) document.getElementById('storeWarn').hidden = false;
+
+const KEY_STAR='leaseboard.starred', KEY_HIDE='leaseboard.hidden';
+const load = k => { try { return new Set(JSON.parse(store.get(k) || '[]')); } catch(e){ return new Set(); } };
+const save = (k,s) => store.set(k, JSON.stringify([...s]));
+let starred = load(KEY_STAR), hidden = load(KEY_HIDE);
+
+/* ---------- data ----------
+   price = sortable midpoint. disp = what's shown. est = estimated.
+   cargo in cu ft (baseline ID.4 = 64.2). evRange = electric-only miles (PHEV).
+   cheapr: 1 = eligible, 0.5 = eligible if trim <= $50k, 0 = no.
+   status: now | fall | clear                                          */
+const BASE = 64.2;
+const DATA = [
+/* ===== EV — available now ===== */
+{n:"Niro EV",b:"Kia",t:"EV",r:2,price:260,disp:"~$260",est:1,cargo:63.7,cEst:1,cheapr:1,st:"now",u:"https://www.kia.com/us/en/niro-ev"},
+{n:"Ioniq 5",b:"Hyundai",t:"EV",r:2,price:340,disp:"~$300–380",est:1,cargo:59.3,cEst:1,cheapr:1,st:"now",u:"https://www.hyundaiusa.com/us/en/vehicles/ioniq-5"},
+{n:"Prologue",b:"Honda",t:"EV",r:2,price:326,disp:"$323–329",est:0,cargo:57.7,cEst:1,cheapr:1,st:"now",u:"https://automobiles.honda.com/prologue"},
+{n:"EV6",b:"Kia",t:"EV",r:2,price:365,disp:"~$340–390",est:1,cargo:50.2,cEst:1,cheapr:1,st:"now",u:"https://www.kia.com/us/en/ev6"},
+{n:"Ioniq 9",b:"Hyundai",t:"EV",r:3,price:384,disp:"$369–399",est:0,cargo:86.9,cEst:0,cheapr:0,st:"now",u:"https://www.hyundaiusa.com/us/en/vehicles/ioniq-9"},
+{n:"bZ",b:"Toyota",t:"EV",r:2,price:389,disp:"$389",est:0,cargo:56,cEst:1,cheapr:1,st:"now",u:"https://www.toyota.com/bz/"},
+{n:"Bolt",b:"Chevrolet",t:"EV",r:2,price:399,disp:"$399",est:0,cargo:57,cEst:1,cheapr:0,st:"now",u:"https://www.chevrolet.com/electric/bolt-ev"},
+{n:"Uncharted",b:"Subaru",t:"EV",r:2,price:415,disp:"$415",est:0,cargo:54,cEst:1,cheapr:0,st:"now",u:"https://www.subaru.com/vehicles/uncharted"},
+{n:"Solterra",b:"Subaru",t:"EV",r:2,price:425,disp:"$425",est:0,cargo:63.5,cEst:1,cheapr:1,st:"now",u:"https://www.subaru.com/vehicles/solterra"},
+{n:"Trailseeker",b:"Subaru",t:"EV",r:2,price:445,disp:"$445",est:0,cargo:65,cEst:1,cheapr:0,st:"now",u:"https://www.subaru.com/vehicles/trailseeker"},
+{n:"Optiq",b:"Cadillac",t:"EV",r:2,price:450,disp:"~$430–470",est:1,cargo:57,cEst:1,cheapr:0,st:"now",u:"https://www.cadillac.com/electric/optiq"},
+{n:"EV9",b:"Kia",t:"EV",r:3,price:449,disp:"$449",est:0,cargo:81.7,cEst:1,cheapr:0,st:"now",u:"https://www.kia.com/us/en/ev9"},
+{n:"bZ Woodland",b:"Toyota",t:"EV",r:2,price:449,disp:"$449",est:0,cargo:66,cEst:1,cheapr:0,st:"now",u:"https://www.toyota.com/bzwoodland/"},
+{n:"C-HR",b:"Toyota",t:"EV",r:2,price:459,disp:"$459",est:0,cargo:44,cEst:1,cheapr:0,st:"now",u:"https://www.toyota.com/chr/"},
+{n:"Model Y",b:"Tesla",t:"EV",r:2,price:459,disp:"$459",est:0,cargo:72,cEst:1,cheapr:1,st:"now",u:"https://www.tesla.com/modely"},
+{n:"Mustang Mach-E",b:"Ford",t:"EV",r:2,price:463,disp:"$463",est:0,cargo:59.7,cEst:1,cheapr:1,st:"now",u:"https://www.ford.com/suvs/mach-e/"},
+{n:"Leaf SV+",b:"Nissan",t:"EV",r:2,price:480,disp:"~$480",est:1,cargo:55,cEst:1,cheapr:1,st:"now",u:"https://www.nissanusa.com/vehicles/electric-cars/leaf.html"},
+{n:"EX30",b:"Volvo",t:"EV",r:2,price:494,disp:"$489–499",est:0,cargo:31.9,cEst:1,cheapr:1,st:"now",u:"https://www.volvocars.com/us/cars/ex30-electric/"},
+{n:"Q4 e-tron",b:"Audi",t:"EV",r:2,price:500,disp:"~$450–550",est:1,cargo:53,cEst:1,cheapr:1,st:"now",u:"https://www.audiusa.com/us/web/en/models/q4-e-tron/"},
+{n:"Equinox EV",b:"Chevrolet",t:"EV",r:2,price:515,disp:"~$500–530",est:1,cargo:57.2,cEst:1,cheapr:1,st:"now",u:"https://www.chevrolet.com/electric/equinox-ev"},
+{n:"Blazer EV",b:"Chevrolet",t:"EV",r:2,price:524,disp:"$509–539",est:0,cargo:59.1,cEst:0,cheapr:1,st:"now",u:"https://www.chevrolet.com/electric/blazer-ev"},
+{n:"Countryman SE ALL4",b:"Mini",t:"EV",r:2,price:549,disp:"$549",est:0,cargo:56,cEst:0,cheapr:1,st:"now",u:"https://www.miniusa.com/model/countryman.html"},
+{n:"EX40",b:"Volvo",t:"EV",r:2,price:579,disp:"$559–599",est:0,cargo:57.5,cEst:0,cheapr:0,st:"now",u:"https://www.volvocars.com/us/cars/ex40-electric/"},
+{n:"RZ 350e",b:"Lexus",t:"EV",r:2,price:594,disp:"$559–629",est:0,cargo:51,cEst:1,cheapr:0.5,st:"now",u:"https://www.lexus.com/models/RZ"},
+{n:"GV60",b:"Genesis",t:"EV",r:2,price:595,disp:"~$570–620",est:1,cargo:54.7,cEst:1,cheapr:0,st:"now",u:"https://www.genesis.com/us/en/gv60.html"},
+{n:"Polestar 4",b:"Polestar",t:"EV",r:2,price:599,disp:"$599",est:0,cargo:54.2,cEst:0,cheapr:0,st:"now",u:"https://www.polestar.com/us/polestar-4/"},
+{n:"Polestar 3",b:"Polestar",t:"EV",r:2,price:600,disp:"~$600",est:1,cargo:49.8,cEst:1,cheapr:0,st:"now",u:"https://www.polestar.com/us/polestar-3/"},
+{n:"Lyriq",b:"Cadillac",t:"EV",r:2,price:605,disp:"~$580–630",est:1,cargo:60.8,cEst:1,cheapr:0,st:"now",u:"https://www.cadillac.com/electric/lyriq"},
+{n:"Kona Electric",b:"Hyundai",t:"EV",r:2,price:700,disp:"~$700+",est:1,cargo:45.8,cEst:1,cheapr:1,st:"now",u:"https://www.hyundaiusa.com/us/en/vehicles/kona-electric"},
+{n:"Electrified GV70",b:"Genesis",t:"EV",r:2,price:705,disp:"~$680–730",est:1,cargo:56.9,cEst:1,cheapr:0,st:"now",u:"https://www.genesis.com/us/en/electrified-gv70.html"},
+{n:"EQE SUV",b:"Mercedes-Benz",t:"EV",r:2,price:749,disp:"$749",est:0,cargo:74,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/eqe/suv"},
+{n:"Vistiq",b:"Cadillac",t:"EV",r:3,price:780,disp:"~$780",est:1,cargo:80,cEst:1,cheapr:0,st:"now",u:"https://www.cadillac.com/electric/vistiq"},
+{n:"EX90",b:"Volvo",t:"EV",r:3,price:794,disp:"$789–799",est:0,cargo:74.3,cEst:1,cheapr:0,st:"now",u:"https://www.volvocars.com/us/cars/ex90-electric/"},
+{n:"iX",b:"BMW",t:"EV",r:2,price:799,disp:"$799",est:0,cargo:77.9,cEst:1,cheapr:0,st:"now",u:"https://www.bmwusa.com/vehicles/bmwi/ix/sports-activity-vehicle.html"},
+{n:"R2 Performance",b:"Rivian",t:"EV",r:2,price:829,disp:"$829 · eff. ~$965",est:0,cargo:66,cEst:1,cheapr:0,st:"now",u:"https://rivian.com/r2"},
+{n:"Gravity",b:"Lucid",t:"EV",r:3,price:874,disp:"$749–999",est:0,cargo:112,cEst:1,cheapr:0,st:"now",u:"https://lucidmotors.com/gravity"},
+{n:"Q6 e-tron",b:"Audi",t:"EV",r:2,price:945,disp:"~$900–990",est:1,cargo:51.4,cEst:1,cheapr:0,st:"now",u:"https://www.audiusa.com/us/web/en/models/q6-e-tron/"},
+{n:"R1S",b:"Rivian",t:"EV",r:3,price:1044,disp:"$899–1,189",est:0,cargo:104,cEst:1,cheapr:0,st:"now",u:"https://rivian.com/r1s"},
+{n:"Macan Electric",b:"Porsche",t:"EV",r:2,price:1049,disp:"$1,049 · 39mo",est:0,cargo:53,cEst:1,cheapr:0,st:"now",u:"https://www.porsche.com/usa/models/macan/"},
+{n:"EQS SUV",b:"Mercedes-Benz",t:"EV",r:3,price:1084,disp:"$949–1,219",est:0,cargo:74,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/eqs/suv"},
+{n:"Hummer EV SUV",b:"GMC",t:"EV",r:2,price:1099,disp:"$1,099",est:0,cargo:81.5,cEst:1,cheapr:0,st:"now",u:"https://www.gmc.com/electric/hummer-ev/suv"},
+{n:"Escalade IQ / IQL",b:"Cadillac",t:"EV",r:3,price:1400,disp:"$1,250–1,550",est:1,cargo:120,cEst:1,cheapr:0,st:"now",u:"https://www.cadillac.com/electric/escalade-iq"},
+{n:"G 580 EQ",b:"Mercedes-Benz",t:"EV",r:2,price:1949,disp:"$1,949",est:0,cargo:70,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/g-class/suv"},
+
+/* ===== EV — clearance / carryover ===== */
+{n:"ID.4",b:"Volkswagen",t:"EV",r:2,price:315,disp:"$250–380",est:1,cargo:64.2,cEst:0,cheapr:1,st:"clear",u:"https://www.vw.com/en/models/id-4.html"},
+{n:"Wagoneer S ('25 stock)",b:"Jeep",t:"EV",r:2,price:550,disp:"$450–650",est:1,cargo:61,cEst:1,cheapr:0,st:"clear",u:"https://www.jeep.com/wagoneer-s.html"},
+{n:"ID. Buzz (2027)",b:"Volkswagen",t:"EV",r:3,price:700,disp:"$600–800",est:1,cargo:145,cEst:1,cheapr:0,st:"clear",u:"https://www.vw.com/en/models/id-buzz.html"},
+
+/* ===== EV — arriving fall 2026 ===== */
+{n:"Eclipse Sportback EV",b:"Mitsubishi",t:"EV",r:2,price:380,disp:"$330–430",est:1,cargo:50,cEst:1,cheapr:0,st:"fall",u:"https://www.mitsubishicars.com/"},
+{n:"EV3",b:"Kia",t:"EV",r:2,price:410,disp:"$350–470",est:1,cargo:44,cEst:1,cheapr:0,st:"fall",u:"https://www.kia.com/us/en/future-vehicle"},
+{n:"GLB Electric",b:"Mercedes-Benz",t:"EV",r:3,price:625,disp:"$550–700",est:1,cargo:70,cEst:1,cheapr:0,st:"fall",u:"https://www.mbusa.com/en/vehicles/class/glb/suv"},
+{n:"Highlander EV",b:"Toyota",t:"EV",r:3,price:680,disp:"$600–760",est:1,cargo:80,cEst:1,cheapr:0,st:"fall",u:"https://www.toyota.com/upcoming-vehicles/"},
+{n:"Getaway",b:"Subaru",t:"EV",r:3,price:680,disp:"$600–760",est:1,cargo:80,cEst:1,cheapr:0,st:"fall",u:"https://www.subaru.com/vehicles.html"},
+{n:"EX60",b:"Volvo",t:"EV",r:2,price:735,disp:"$650–820",est:1,cargo:60,cEst:1,cheapr:0,st:"fall",u:"https://www.volvocars.com/us/cars/ex60-electric/"},
+{n:"iX3 50 xDrive",b:"BMW",t:"EV",r:2,price:750,disp:"$650–850",est:1,cargo:65,cEst:1,cheapr:0,st:"fall",u:"https://www.bmwusa.com/vehicles/bmwi/ix3.html"},
+{n:"Recon",b:"Jeep",t:"EV",r:2,price:760,disp:"$620–900",est:1,cargo:65,cEst:1,cheapr:0,st:"fall",u:"https://www.jeep.com/recon.html"},
+{n:"GLC Electric",b:"Mercedes-Benz",t:"EV",r:2,price:780,disp:"$690–870",est:1,cargo:65,cEst:1,cheapr:0,st:"fall",u:"https://www.mbusa.com/en/vehicles/class/glc/suv"},
+{n:"TZ",b:"Lexus",t:"EV",r:3,price:845,disp:"$750–940",est:1,cargo:80,cEst:1,cheapr:0,st:"fall",u:"https://www.lexus.com/future-vehicles"},
+{n:"iX5 60 xDrive",b:"BMW",t:"EV",r:2,price:1040,disp:"$920–1,160",est:1,cargo:72,cEst:1,cheapr:0,st:"fall",u:"https://www.bmwusa.com/vehicles/x-models/x5/sports-activity-vehicle.html"},
+{n:"GV90",b:"Genesis",t:"EV",r:3,price:1275,disp:"$1,100–1,450",est:1,cargo:90,cEst:1,cheapr:0,st:"fall",u:"https://www.genesis.com/us/en/genesis.html"},
+{n:"Range Rover Sport Electric",b:"Land Rover",t:"EV",r:2,price:1400,disp:"$1,250–1,550",est:1,cargo:70,cEst:1,cheapr:0,st:"fall",u:"https://www.landroverusa.com/vehicles/range-rover-sport/index.html"},
+{n:"Cayenne Electric",b:"Porsche",t:"EV",r:2,price:1500,disp:"$1,350–1,650",est:1,cargo:85,cEst:1,cheapr:0,st:"fall",u:"https://www.porsche.com/usa/models/cayenne/"},
+{n:"Cayenne Coupe Electric",b:"Porsche",t:"EV",r:2,price:1560,disp:"$1,400–1,720",est:1,cargo:75,cEst:1,cheapr:0,st:"fall",u:"https://www.porsche.com/usa/models/cayenne/"},
+{n:"Range Rover Electric",b:"Land Rover",t:"EV",r:2,price:1675,disp:"$1,500–1,850",est:1,cargo:85,cEst:1,cheapr:0,st:"fall",u:"https://www.landroverusa.com/vehicles/range-rover/index.html"},
+{n:"Type 01",b:"Jaguar",t:"EV",r:2,price:1850,disp:"$1,650–2,050",est:1,cargo:45,cEst:1,cheapr:0,st:"fall",u:"https://www.jaguarusa.com/"},
+
+/* ===== PHEV — available now ===== */
+{n:"CX-70 PHEV",b:"Mazda",t:"PHEV",r:2,price:249,disp:"$249 · $7,789 down",est:0,ev:26,cargo:75,cEst:1,cheapr:0,st:"now",u:"https://www.mazdausa.com/vehicles/cx-70-phev"},
+{n:"CX-90 PHEV",b:"Mazda",t:"PHEV",r:3,price:299,disp:"$299 · $8,989 down",est:0,ev:26,cargo:74.2,cEst:1,cheapr:1,st:"now",u:"https://www.mazdausa.com/vehicles/cx-90-phev"},
+{n:"Sportage PHEV",b:"Kia",t:"PHEV",r:2,price:315,disp:"~$300–330",est:1,ev:33,cargo:70,cEst:1,cheapr:1,st:"now",u:"https://www.kia.com/us/en/sportage-plug-in-hybrid"},
+{n:"Tucson PHEV",b:"Hyundai",t:"PHEV",r:2,price:329,disp:"$329 · eff. $440",est:0,ev:33,cargo:66.3,cEst:1,cheapr:1,st:"now",u:"https://www.hyundaiusa.com/us/en/vehicles/tucson-plug-in-hybrid"},
+{n:"Escape PHEV",b:"Ford",t:"PHEV",r:2,price:362,disp:"$362",est:0,ev:37,cargo:60.8,cEst:1,cheapr:1,st:"now",u:"https://www.ford.com/suvs/escape/"},
+{n:"Sorento PHEV",b:"Kia",t:"PHEV",r:3,price:445,disp:"~$430–460",est:1,ev:32,cargo:75,cEst:1,cheapr:1,st:"now",u:"https://www.kia.com/us/en/sorento-plug-in-hybrid"},
+{n:"Outlander PHEV",b:"Mitsubishi",t:"PHEV",r:3,price:465,disp:"~$450–480",est:1,ev:38,cargo:64.3,cEst:1,cheapr:1,st:"now",u:"https://www.mitsubishicars.com/cars/outlander-phev"},
+{n:"Rogue PHEV",b:"Nissan",t:"PHEV",r:2,price:519,disp:"$519",est:0,ev:38,cargo:70,cEst:1,cheapr:0,st:"now",u:"https://www.nissanusa.com/vehicles/crossovers-suvs/rogue-plug-in-hybrid.html"},
+{n:"NX 450h+",b:"Lexus",t:"PHEV",r:2,price:529,disp:"$529",est:0,ev:37,cargo:46.9,cEst:1,cheapr:0,st:"now",u:"https://www.lexus.com/models/NX-hybrid"},
+{n:"RAV4 PHEV",b:"Toyota",t:"PHEV",r:2,price:560,disp:"$500–620",est:1,ev:50,cargo:69.8,cEst:1,cheapr:1,st:"now",u:"https://www.toyota.com/rav4plugin/"},
+{n:"Corsair PHEV",b:"Lincoln",t:"PHEV",r:2,price:575,disp:"$500–650",est:1,ev:28,cargo:57.6,cEst:1,cheapr:0,st:"now",u:"https://www.lincoln.com/luxury-suvs/corsair/"},
+{n:"X3 30e xDrive",b:"BMW",t:"PHEV",r:2,price:660,disp:"$600–720",est:1,ev:30,cargo:67.1,cEst:1,cheapr:0.5,st:"now",u:"https://www.bmwusa.com/vehicles/x-models/x3/sports-activity-vehicle.html"},
+{n:"RX 450h+",b:"Lexus",t:"PHEV",r:2,price:699,disp:"$699",est:0,ev:37,cargo:46.2,cEst:1,cheapr:0,st:"now",u:"https://www.lexus.com/models/RX-hybrid"},
+{n:"XC60 PHEV",b:"Volvo",t:"PHEV",r:2,price:715,disp:"$650–780",est:1,ev:35,cargo:63.3,cEst:1,cheapr:0,st:"now",u:"https://www.volvocars.com/us/cars/xc60-plugin-hybrid/"},
+{n:"Q5 PHEV",b:"Audi",t:"PHEV",r:2,price:725,disp:"$650–800",est:1,ev:26,cargo:54,cEst:1,cheapr:0,st:"now",u:"https://www.audiusa.com/us/web/en/models/q5/"},
+{n:"GLC 350e",b:"Mercedes-Benz",t:"PHEV",r:2,price:775,disp:"$700–850",est:1,ev:54,cargo:56.3,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/glc/suv"},
+{n:"XC90 PHEV",b:"Volvo",t:"PHEV",r:3,price:875,disp:"$800–950",est:1,ev:32,cargo:85.7,cEst:1,cheapr:0,st:"now",u:"https://www.volvocars.com/us/cars/xc90-plugin-hybrid/"},
+{n:"X5 xDrive50e",b:"BMW",t:"PHEV",r:2,price:929,disp:"$929 · 39mo",est:0,ev:40,cargo:72.3,cEst:1,cheapr:0,st:"now",u:"https://www.bmwusa.com/vehicles/x-models/x5/sports-activity-vehicle.html"},
+{n:"GLE 450e",b:"Mercedes-Benz",t:"PHEV",r:2,price:975,disp:"$900–1,050",est:1,ev:48,cargo:74.9,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/gle/suv"},
+{n:"Defender PHEV",b:"Land Rover",t:"PHEV",r:2,price:1000,disp:"$900–1,100",est:1,ev:48,cargo:78,cEst:1,cheapr:0,st:"now",u:"https://www.landroverusa.com/vehicles/defender/index.html"},
+{n:"TX 550h+",b:"Lexus",t:"PHEV",r:3,price:999,disp:"$999",est:0,ev:33,cargo:97,cEst:1,cheapr:0,st:"now",u:"https://www.lexus.com/models/TX"},
+{n:"Cayenne E-Hybrid",b:"Porsche",t:"PHEV",r:2,price:1275,disp:"$1,150–1,400",est:1,ev:40,cargo:60,cEst:1,cheapr:0,st:"now",u:"https://www.porsche.com/usa/models/cayenne/"},
+{n:"Range Rover Sport PHEV",b:"Land Rover",t:"PHEV",r:2,price:1325,disp:"$1,200–1,450",est:1,ev:51,cargo:70,cEst:1,cheapr:0,st:"now",u:"https://www.landroverusa.com/vehicles/range-rover-sport/index.html"},
+{n:"Range Rover PHEV",b:"Land Rover",t:"PHEV",r:2,price:1775,disp:"$1,600–1,950",est:1,ev:51,cargo:70,cEst:1,cheapr:0,st:"now",u:"https://www.landroverusa.com/vehicles/range-rover/index.html"},
+{n:"Bentayga PHEV",b:"Bentley",t:"PHEV",r:2,price:2750,disp:"$2,500–3,000",est:1,ev:27,cargo:46,cEst:1,cheapr:0,st:"now",u:"https://www.bentleymotors.com/en/models/bentayga.html"},
+{n:"Urus SE",b:"Lamborghini",t:"PHEV",r:2,price:3300,disp:"$3,000–3,600",est:1,ev:37,cargo:56,cEst:1,cheapr:0,st:"now",u:"https://www.lamborghini.com/en-en/models/urus"},
+
+/* ===== PHEV — arriving fall 2026 ===== */
+{n:"GLB PHEV",b:"Mercedes-Benz",t:"PHEV",r:3,price:655,disp:"$580–730",est:1,ev:null,cargo:70,cEst:1,cheapr:0,st:"fall",u:"https://www.mbusa.com/en/vehicles/class/glb/suv"},
+{n:"X5 50e (new gen)",b:"BMW",t:"PHEV",r:2,price:950,disp:"$850–1,050",est:1,ev:44,cargo:72,cEst:1,cheapr:0,st:"fall",u:"https://www.bmwusa.com/vehicles/x-models/x5/sports-activity-vehicle.html"}
+];
+DATA.forEach((d,i)=>{ d.id = (d.b+"-"+d.n).toLowerCase().replace(/[^a-z0-9]+/g,"-"); d.i = i; });
+document.getElementById('statTotal').textContent = DATA.length;
+
+/* ---------- state ---------- */
+const F = { type:'all', status:'all', rows:'all', maxPrice:2000, minCargo:30, q:'', cheapr:false, star:false, showHidden:false };
+let sortKey='price', sortDir=1;
+
+/* ---------- render ---------- */
+const CARGO_MAX = 145;
+const STATUS_LABEL = { now:'Available now', fall:'Arriving fall', clear:'Clearance' };
+
+function glyph(c){
+  if(c >= 90) return {s:'▲▲', c:'up'};
+  if(c >= 69) return {s:'▲', c:'up'};
+  if(c >= 59) return {s:'●', c:'even'};
+  if(c >= 48) return {s:'▼', c:'down'};
+  return {s:'▼▼', c:'down'};
+}
+function fillClass(c){
+  if(c >= 69) return 'over';
+  if(c >= 48) return 'under';
+  return 'way-under';
+}
+
+function render(){
+  const q = F.q.trim().toLowerCase();
+  let rows = DATA.filter(d=>{
+    if(F.type!=='all' && d.t!==F.type) return false;
+    if(F.status!=='all' && d.st!==F.status) return false;
+    if(F.rows!=='all' && String(d.r)!==F.rows) return false;
+    if(d.price > F.maxPrice) return false;
+    if(d.cargo < F.minCargo) return false;
+    if(F.cheapr && !d.cheapr) return false;
+    if(F.star && !starred.has(d.id)) return false;
+    if(!F.showHidden && hidden.has(d.id)) return false;
+    if(q && !(d.n+' '+d.b).toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  rows.sort((a,b)=>{
+    let x,y;
+    switch(sortKey){
+      case 'name': x=a.b+a.n; y=b.b+b.n; break;
+      case 'type': x=a.t; y=b.t; break;
+      case 'status': x=a.st; y=b.st; break;
+      case 'evRange': x=a.ev??-1; y=b.ev??-1; break;
+      case 'cheapr': x=a.cheapr; y=b.cheapr; break;
+      default: x=a[sortKey]; y=b[sortKey];
+    }
+    if(x<y) return -1*sortDir;
+    if(x>y) return 1*sortDir;
+    return a.price-b.price;
+  });
+
+  const tb = document.getElementById('tbody');
+  tb.innerHTML = rows.map(d=>{
+    const isStar = starred.has(d.id), isHide = hidden.has(d.id);
+    const g = glyph(d.cargo);
+    const w = Math.min(100, d.cargo/CARGO_MAX*100);
+    const basePct = BASE/CARGO_MAX*100;
+    return `<tr class="${isStar?'starred':''} ${isHide?'hidden-row':''}">
+      <td><button class="iconbtn ${isStar?'on':''}" data-star="${d.id}" title="${isStar?'Unstar':'Star'}" aria-label="Star ${d.b} ${d.n}">${isStar?'★':'☆'}</button></td>
+      <td><button class="iconbtn ${isHide?'off-on':''}" data-hide="${d.id}" title="${isHide?'Unhide':'Hide'}" aria-label="Hide ${d.b} ${d.n}">${isHide?'⊗':'⊘'}</button></td>
+      <td>
+        <a class="vname" href="${d.u}" target="_blank" rel="noopener noreferrer">${d.n}<span class="ext">↗</span></a>
+        <span class="brand">${d.b}</span>
+      </td>
+      <td><span class="tag ${d.t}">${d.t}</span></td>
+      <td class="num">${d.r}</td>
+      <td class="num">${d.disp}${d.est?' <span class="est">est.</span>':''}</td>
+      <td class="num">${d.ev!=null?d.ev:'<span class="no">—</span>'}</td>
+      <td>
+        <div class="cargo">
+          <div class="bar">
+            <div class="fill ${fillClass(d.cargo)}" style="width:${w}%"></div>
+            <div class="base" style="left:${basePct}%"></div>
+          </div>
+          <span class="cn">${d.cEst?'~':''}${d.cargo}</span>
+          <span class="glyph ${g.c}">${g.s}</span>
+        </div>
+      </td>
+      <td>${d.cheapr===1?'<span class="yes">✓ $'+(d.t==='EV'?'1,000':'500')+'</span>':d.cheapr===0.5?'<span class="part">if ≤$50k</span>':'<span class="no">—</span>'}</td>
+      <td class="status"><span class="dot ${d.st}"></span>${STATUS_LABEL[d.st]}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('empty').hidden = rows.length>0;
+  const nStar = DATA.filter(d=>starred.has(d.id)).length;
+  const nHide = DATA.filter(d=>hidden.has(d.id)).length;
+  document.getElementById('tally').innerHTML =
+    `Showing <b>${rows.length}</b> of ${DATA.length} &nbsp;·&nbsp; ${nStar} starred &nbsp;·&nbsp; ${nHide} hidden`;
+}
+
+/* ---------- events ---------- */
+function seg(id, key){
+  document.getElementById(id).addEventListener('click', e=>{
+    const btn = e.target.closest('button'); if(!btn) return;
+    [...e.currentTarget.children].forEach(b=>b.setAttribute('aria-pressed', b===btn));
+    F[key] = btn.dataset.v; render();
+  });
+}
+seg('segType','type'); seg('segStatus','status'); seg('segRows','rows');
+
+document.getElementById('fPrice').addEventListener('input', e=>{
+  F.maxPrice = +e.target.value;
+  document.getElementById('priceOut').textContent = F.maxPrice>=2000 ? 'any' : '≤ $'+F.maxPrice.toLocaleString();
+  render();
+});
+document.getElementById('fCargo').addEventListener('input', e=>{
+  F.minCargo = +e.target.value;
+  document.getElementById('cargoOut').textContent = F.minCargo<=30 ? 'any' : '≥ '+F.minCargo+' cu ft';
+  render();
+});
+document.getElementById('fSearch').addEventListener('input', e=>{ F.q=e.target.value; render(); });
+document.getElementById('fCheapr').addEventListener('change', e=>{ F.cheapr=e.target.checked; render(); });
+document.getElementById('fStar').addEventListener('change', e=>{ F.star=e.target.checked; render(); });
+document.getElementById('fHidden').addEventListener('change', e=>{ F.showHidden=e.target.checked; render(); });
+
+document.getElementById('btnReset').addEventListener('click', ()=>{
+  Object.assign(F,{type:'all',status:'all',rows:'all',maxPrice:2000,minCargo:30,q:'',cheapr:false,star:false,showHidden:false});
+  ['segType','segStatus','segRows'].forEach(id=>{
+    [...document.getElementById(id).children].forEach((b,i)=>b.setAttribute('aria-pressed', i===0));
+  });
+  document.getElementById('fPrice').value=2000; document.getElementById('priceOut').textContent='any';
+  document.getElementById('fCargo').value=30; document.getElementById('cargoOut').textContent='any';
+  document.getElementById('fSearch').value='';
+  document.getElementById('fCheapr').checked=false;
+  document.getElementById('fStar').checked=false;
+  document.getElementById('fHidden').checked=false;
+  render();
+});
+
+document.querySelectorAll('th.sortable').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const k = th.dataset.sort;
+    if(sortKey===k) sortDir*=-1; else { sortKey=k; sortDir=1; }
+    document.querySelectorAll('th.sortable').forEach(o=>o.removeAttribute('data-dir'));
+    th.setAttribute('data-dir', sortDir>0?'asc':'desc');
+    th.querySelector('.arrow').textContent = sortDir>0?'▼':'▲';
+    render();
+  });
+});
+
+document.getElementById('tbody').addEventListener('click', e=>{
+  const s = e.target.closest('[data-star]'), h = e.target.closest('[data-hide]');
+  if(s){ const id=s.dataset.star; starred.has(id)?starred.delete(id):starred.add(id); save(KEY_STAR,starred); render(); }
+  if(h){ const id=h.dataset.hide; hidden.has(id)?hidden.delete(id):hidden.add(id); save(KEY_HIDE,hidden); render(); }
+});
+
+render();
+</script>
+</body>
+</html>
