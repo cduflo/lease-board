@@ -139,6 +139,7 @@ tbody tr.starred td:first-child{box-shadow:inset 3px 0 0 var(--star)}
 .status{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);white-space:nowrap}
 .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;vertical-align:1px}
 .dot.now{background:var(--ev)}.dot.fall{background:#B98A1E}.dot.clear{background:var(--flag)}
+.dot.later{background:var(--ink3)}
 
 /* signature: cargo bar against the ID.4 baseline */
 .cargo{display:flex;align-items:center;gap:9px;min-width:190px}
@@ -204,6 +205,7 @@ a.rate:hover .sc{text-decoration:underline}
   text-transform:uppercase;margin:0 0 6px;color:var(--ink);font-weight:600;
 }
 .legend ul{margin:0;padding-left:16px}
+.legend .mono{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink)}
 .legend li{margin-bottom:3px}
 .warnbar{
   background:#F3E4C8;border:1.5px solid #B98A1E;padding:9px 14px;margin:14px 0 0;
@@ -222,7 +224,7 @@ a.rate:hover .sc{text-decoration:underline}
   <header class="sticker">
     <div class="sticker-top">
       <span class="mark">Fall 2026 Lease Board</span>
-      <span class="sub">36-month terms · West Hartford, CT · compiled 24 Jul 2026</span>
+      <span class="sub">36 months · $0 down · 12k mi/yr · West Hartford, CT · compiled 28 Jul 2026</span>
     </div>
     <div class="sticker-body">
       <div class="cell">
@@ -269,6 +271,7 @@ a.rate:hover .sc{text-decoration:underline}
           <button data-v="now" aria-pressed="false">Now</button>
           <button data-v="fall" aria-pressed="false">Fall</button>
           <button data-v="clear" aria-pressed="false">Clearance</button>
+          <button data-v="later" aria-pressed="false">Later</button>
         </div>
       </div>
       <div class="grp">
@@ -281,7 +284,7 @@ a.rate:hover .sc{text-decoration:underline}
       </div>
       <div class="grp">
         <label for="fPrice">Max $/mo · <span class="rangeval" id="priceOut">any</span></label>
-        <input type="range" id="fPrice" min="250" max="2000" step="25" value="2000">
+        <input type="range" id="fPrice" min="350" max="4500" step="50" value="4500">
       </div>
       <div class="grp">
         <label for="fCargo">Min cargo · <span class="rangeval" id="cargoOut">any</span></label>
@@ -325,9 +328,12 @@ a.rate:hover .sc{text-decoration:underline}
     <div>
       <h4>Reading the numbers</h4>
       <ul>
-        <li><b>$/mo</b> assumes ~$3–6k due at signing, 10k mi/yr.</li>
-        <li><b>est.</b> means no published 36-month offer — either a 24/39/48-month term converted, or 1.0–1.45% of MSRP for unlaunched models.</li>
+        <li><b>$/mo is all-in: $0 due at signing, 12,000 mi/yr, 36 months.</b> Every advertised down payment has been rolled into the monthly, so no row can buy a better rank with cash up front. Taxes and DMV excluded.</li>
+        <li>Advertised offers were converted as: <span class="mono">monthly + (due&nbsp;at&nbsp;signing − first&nbsp;payment) × (1/36 + money&nbsp;factor)</span>, then a mileage step of MSRP × 1.5% ÷ 36 for 10k → 12k. Real money factors used where published, otherwise 0.00150.</li>
+        <li><b>est.</b> means no published 36-month offer to convert — a shorter/longer term rescaled, or 1.25–1.65% of MSRP for models that haven't launched. Estimated rows show a range instead of a single number.</li>
         <li><b>Cargo</b> is max cu ft, all rear seats folded. Values with ~ are unverified.</li>
+        <li><b>Not this fall</b> means the maker's own timing puts it past the fall 2026 window — kept for context, not shoppable now. Toyota's 22 Jul 2026 plant delay moved the Highlander EV, Getaway and TZ together; BMW puts the iX5 60 and new-gen X5 50e in Q1 2027; the GV90, both electric Range Rovers and the Type 01 land in 2027.</li>
+        <li><b>Three rows are unconfirmed products.</b> No plug-in hybrid GLB has been announced — the next-gen GLB is EV and mild-hybrid only. The X3 30e xDrive is absent from BMW's current US lineup. The Defender P400e appears to be UK/Europe-only. Left on the board pending better information; treat their numbers as placeholders.</li>
       </ul>
     </div>
     <div>
@@ -354,6 +360,19 @@ a.rate:hover .sc{text-decoration:underline}
         <li>Discontinued: Acura ZDX, Nissan Ariya, Tesla Model X, Audi Q8 e-tron, Mercedes EQB, Polestar 2.</li>
         <li>All Stellantis PHEVs ended with MY2026 — Wrangler 4xe, Grand Cherokee 4xe, Hornet R/T, Tonale.</li>
         <li>Kia Niro PHEV gone. Crosstrek Hybrid is no longer a plug-in.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Scope, on purpose</h4>
+      <ul>
+        <li><b>Used EV/PHEV purchase financing is not on this board.</b> It ranks one thing: the monthly cost of renting a new EV for 36 months. A loan payment is not that number.</li>
+        <li>Used pricing is VIN-specific and turns over weekly. A hand-compiled static file can't stay honest about it — a stale lease row is a wrong number, a stale used row is a car that sold in April.</li>
+        <li>No incentive story to model either: the $4,000 federal used clean vehicle credit expired 30 Sep 2025, and CHEAPR is new-vehicle only.</li>
+        <li>For the used market use a live search, not this file —
+          <!-- Replace the href below with your own saved CarGurus/AutoTrader search once you've set the filters. -->
+          <a href="https://www.cargurus.com/Cars/new-electric-cars" rel="noopener">saved used-EV search ↗</a>
+          <em>(swap in your own filtered search URL)</em>.</li>
+        <li><b>If you want to own one of these, the path runs through the lease, not around it</b> — every offer here has a contractual buyout at residual. That's priced used-EV ownership, already on the board.</li>
       </ul>
     </div>
   </div>
@@ -386,116 +405,116 @@ let starred = load(KEY_STAR), hidden = load(KEY_HIDE);
 const BASE = 64.2;
 const DATA = [
 /* ===== EV — available now ===== */
-{n:"Niro EV",b:"Kia",t:"EV",r:2,price:260,disp:"~$260",est:1,cargo:63.7,cEst:1,cheapr:1,st:"now",u:"https://www.kia.com/us/en/niro-ev",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/kia/niro-ev"},
-{n:"Ioniq 5",b:"Hyundai",t:"EV",r:2,price:340,disp:"~$300–380",est:1,cargo:59.3,cEst:1,cheapr:1,st:"now",u:"https://www.hyundaiusa.com/us/en/vehicles/ioniq-5",cd:10,cds:"exact",cdu:"https://www.caranddriver.com/hyundai/ioniq-5"},
-{n:"Prologue",b:"Honda",t:"EV",r:2,price:326,disp:"$323–329",est:0,cargo:57.7,cEst:1,cheapr:1,st:"now",u:"https://automobiles.honda.com/prologue",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/honda/prologue"},
-{n:"EV6",b:"Kia",t:"EV",r:2,price:365,disp:"~$340–390",est:1,cargo:50.2,cEst:1,cheapr:1,st:"now",u:"https://www.kia.com/us/en/ev6",cd:9.5,cds:"exact",cdu:"https://www.caranddriver.com/kia/ev6"},
-{n:"Ioniq 9",b:"Hyundai",t:"EV",r:3,price:384,disp:"$369–399",est:0,cargo:86.9,cEst:0,cheapr:0,st:"now",u:"https://www.hyundaiusa.com/us/en/vehicles/ioniq-9",cd:9.5,cds:"exact",cdu:"https://www.caranddriver.com/hyundai/ioniq-9"},
-{n:"bZ",b:"Toyota",t:"EV",r:2,price:389,disp:"$389",est:0,cargo:56,cEst:1,cheapr:1,st:"now",u:"https://www.toyota.com/bz/",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/toyota/bz"},
-{n:"Bolt",b:"Chevrolet",t:"EV",r:2,price:399,disp:"$399",est:0,cargo:57,cEst:1,cheapr:0,st:"now",u:"https://www.chevrolet.com/electric/bolt-ev",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/chevrolet/bolt-ev"},
-{n:"Uncharted",b:"Subaru",t:"EV",r:2,price:415,disp:"$415",est:0,cargo:54,cEst:1,cheapr:0,st:"now",u:"https://www.subaru.com/vehicles/uncharted",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/subaru/uncharted"},
-{n:"Solterra",b:"Subaru",t:"EV",r:2,price:425,disp:"$425",est:0,cargo:63.5,cEst:1,cheapr:1,st:"now",u:"https://www.subaru.com/vehicles/solterra",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/subaru/solterra"},
-{n:"Trailseeker",b:"Subaru",t:"EV",r:2,price:445,disp:"$445",est:0,cargo:65,cEst:1,cheapr:0,st:"now",u:"https://www.subaru.com/vehicles/trailseeker",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/subaru/trailseeker"},
-{n:"Optiq",b:"Cadillac",t:"EV",r:2,price:450,disp:"~$430–470",est:1,cargo:57,cEst:1,cheapr:0,st:"now",u:"https://www.cadillac.com/electric/optiq",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/cadillac/optiq"},
-{n:"EV9",b:"Kia",t:"EV",r:3,price:449,disp:"$449",est:0,cargo:81.7,cEst:1,cheapr:0,st:"now",u:"https://www.kia.com/us/en/ev9",cd:10,cds:"exact",cdu:"https://www.caranddriver.com/kia/ev9"},
-{n:"bZ Woodland",b:"Toyota",t:"EV",r:2,price:449,disp:"$449",est:0,cargo:66,cEst:1,cheapr:0,st:"now",u:"https://www.toyota.com/bzwoodland/",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/toyota/bz-woodland"},
-{n:"C-HR",b:"Toyota",t:"EV",r:2,price:459,disp:"$459",est:0,cargo:44,cEst:1,cheapr:0,st:"now",u:"https://www.toyota.com/chr/",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/toyota/c-hr"},
-{n:"Model Y",b:"Tesla",t:"EV",r:2,price:459,disp:"$459",est:0,cargo:72,cEst:1,cheapr:1,st:"now",u:"https://www.tesla.com/modely",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/tesla/model-y"},
-{n:"Mustang Mach-E",b:"Ford",t:"EV",r:2,price:463,disp:"$463",est:0,cargo:59.7,cEst:1,cheapr:1,st:"now",u:"https://www.ford.com/suvs/mach-e/",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/ford/mustang-mach-e"},
-{n:"Leaf SV+",b:"Nissan",t:"EV",r:2,price:480,disp:"~$480",est:1,cargo:55,cEst:1,cheapr:1,st:"now",u:"https://www.nissanusa.com/vehicles/electric-cars/leaf.html",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/nissan/leaf"},
-{n:"EX30",b:"Volvo",t:"EV",r:2,price:494,disp:"$489–499",est:0,cargo:31.9,cEst:1,cheapr:1,st:"now",u:"https://www.volvocars.com/us/cars/ex30-electric/",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/volvo/ex30"},
-{n:"Q4 e-tron",b:"Audi",t:"EV",r:2,price:500,disp:"~$450–550",est:1,cargo:53,cEst:1,cheapr:1,st:"now",u:"https://www.audiusa.com/us/web/en/models/q4-e-tron/",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/audi/q4-e-tron"},
-{n:"Equinox EV",b:"Chevrolet",t:"EV",r:2,price:515,disp:"~$500–530",est:1,cargo:57.2,cEst:1,cheapr:1,st:"now",u:"https://www.chevrolet.com/electric/equinox-ev",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/chevrolet/equinox-ev"},
-{n:"Blazer EV",b:"Chevrolet",t:"EV",r:2,price:524,disp:"$509–539",est:0,cargo:59.1,cEst:0,cheapr:1,st:"now",u:"https://www.chevrolet.com/electric/blazer-ev",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/chevrolet/blazer-ev"},
-{n:"Countryman SE ALL4",b:"Mini",t:"EV",r:2,price:549,disp:"$549",est:0,cargo:56,cEst:0,cheapr:1,st:"now",u:"https://www.miniusa.com/model/countryman.html",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/mini/countryman-electric"},
-{n:"EX40",b:"Volvo",t:"EV",r:2,price:579,disp:"$559–599",est:0,cargo:57.5,cEst:0,cheapr:0,st:"now",u:"https://www.volvocars.com/us/cars/ex40-electric/",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/volvo/ex40"},
-{n:"RZ 350e",b:"Lexus",t:"EV",r:2,price:594,disp:"$559–629",est:0,cargo:51,cEst:1,cheapr:0.5,st:"now",u:"https://www.lexus.com/models/RZ",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/lexus/rz"},
-{n:"GV60",b:"Genesis",t:"EV",r:2,price:595,disp:"~$570–620",est:1,cargo:54.7,cEst:1,cheapr:0,st:"now",u:"https://www.genesis.com/us/en/gv60.html",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/genesis/gv60"},
-{n:"Polestar 4",b:"Polestar",t:"EV",r:2,price:599,disp:"$599",est:0,cargo:54.2,cEst:0,cheapr:0,st:"now",u:"https://www.polestar.com/us/polestar-4/",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/polestar/polestar-4"},
-{n:"Polestar 3",b:"Polestar",t:"EV",r:2,price:600,disp:"~$600",est:1,cargo:49.8,cEst:1,cheapr:0,st:"now",u:"https://www.polestar.com/us/polestar-3/",cd:8.5,cds:"nameplate",cdu:"https://www.caranddriver.com/polestar/polestar-3"},
-{n:"Lyriq",b:"Cadillac",t:"EV",r:2,price:605,disp:"~$580–630",est:1,cargo:60.8,cEst:1,cheapr:0,st:"now",u:"https://www.cadillac.com/electric/lyriq",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/cadillac/lyriq"},
-{n:"Kona Electric",b:"Hyundai",t:"EV",r:2,price:700,disp:"~$700+",est:1,cargo:45.8,cEst:1,cheapr:1,st:"now",u:"https://www.hyundaiusa.com/us/en/vehicles/kona-electric",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/hyundai/kona-electric"},
-{n:"Electrified GV70",b:"Genesis",t:"EV",r:2,price:705,disp:"~$680–730",est:1,cargo:56.9,cEst:1,cheapr:0,st:"now",u:"https://www.genesis.com/us/en/electrified-gv70.html",cd:8.5,cds:"nameplate",cdu:"https://www.caranddriver.com/genesis/electrified-gv70"},
-{n:"EQE SUV",b:"Mercedes-Benz",t:"EV",r:2,price:749,disp:"$749",est:0,cargo:74,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/eqe/suv",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/mercedes-benz/eqe-suv"},
-{n:"Vistiq",b:"Cadillac",t:"EV",r:3,price:780,disp:"~$780",est:1,cargo:80,cEst:1,cheapr:0,st:"now",u:"https://www.cadillac.com/electric/vistiq",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/cadillac/vistiq"},
-{n:"EX90",b:"Volvo",t:"EV",r:3,price:794,disp:"$789–799",est:0,cargo:74.3,cEst:1,cheapr:0,st:"now",u:"https://www.volvocars.com/us/cars/ex90-electric/",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/volvo/ex90"},
-{n:"iX",b:"BMW",t:"EV",r:2,price:799,disp:"$799",est:0,cargo:77.9,cEst:1,cheapr:0,st:"now",u:"https://www.bmwusa.com/vehicles/bmwi/ix/sports-activity-vehicle.html",cd:9.5,cds:"exact",cdu:"https://www.caranddriver.com/bmw/ix"},
-{n:"R2 Performance",b:"Rivian",t:"EV",r:2,price:829,disp:"$829 · eff. ~$965",est:0,cargo:66,cEst:1,cheapr:0,st:"now",u:"https://rivian.com/r2",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/rivian/r2"},
-{n:"Gravity",b:"Lucid",t:"EV",r:3,price:874,disp:"$749–999",est:0,cargo:112,cEst:1,cheapr:0,st:"now",u:"https://lucidmotors.com/gravity",cd:10,cds:"exact",cdu:"https://www.caranddriver.com/lucid/gravity"},
-{n:"Q6 e-tron",b:"Audi",t:"EV",r:2,price:945,disp:"~$900–990",est:1,cargo:51.4,cEst:1,cheapr:0,st:"now",u:"https://www.audiusa.com/us/web/en/models/q6-e-tron/",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/audi/q6-e-tron"},
-{n:"R1S",b:"Rivian",t:"EV",r:3,price:1044,disp:"$899–1,189",est:0,cargo:104,cEst:1,cheapr:0,st:"now",u:"https://rivian.com/r1s",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/rivian/r1s"},
-{n:"Macan Electric",b:"Porsche",t:"EV",r:2,price:1049,disp:"$1,049 · 39mo",est:0,cargo:53,cEst:1,cheapr:0,st:"now",u:"https://www.porsche.com/usa/models/macan/",cd:10,cds:"nameplate",cdu:"https://www.caranddriver.com/porsche/macan"},
-{n:"EQS SUV",b:"Mercedes-Benz",t:"EV",r:3,price:1084,disp:"$949–1,219",est:0,cargo:74,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/eqs/suv",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/mercedes-benz/eqs-suv"},
-{n:"Hummer EV SUV",b:"GMC",t:"EV",r:2,price:1099,disp:"$1,099",est:0,cargo:81.5,cEst:1,cheapr:0,st:"now",u:"https://www.gmc.com/electric/hummer-ev/suv",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/gmc/hummer-ev-suv"},
-{n:"Escalade IQ / IQL",b:"Cadillac",t:"EV",r:3,price:1400,disp:"$1,250–1,550",est:1,cargo:120,cEst:1,cheapr:0,st:"now",u:"https://www.cadillac.com/electric/escalade-iq",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/cadillac/escalade-iq"},
-{n:"G 580 EQ",b:"Mercedes-Benz",t:"EV",r:2,price:1949,disp:"$1,949",est:0,cargo:70,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/g-class/suv",cd:9,cds:"nameplate",cdu:"https://www.caranddriver.com/mercedes-benz/g-class"},
+{n:"Niro EV",b:"Kia",t:"EV",r:2,price:395,disp:"$395",est:0,cargo:63.7,cEst:1,cheapr:1,st:"now",u:"https://www.kia.com/us/en/niro-ev",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/kia/niro-ev"},
+{n:"Ioniq 5",b:"Hyundai",t:"EV",r:2,price:428,disp:"$428",est:0,cargo:59.3,cEst:1,cheapr:1,st:"now",u:"https://www.hyundaiusa.com/us/en/vehicles/ioniq-5",cd:10,cds:"exact",cdu:"https://www.caranddriver.com/hyundai/ioniq-5"},
+{n:"Prologue",b:"Honda",t:"EV",r:2,price:404,disp:"$404",est:0,cargo:57.7,cEst:1,cheapr:1,st:"now",u:"https://automobiles.honda.com/prologue",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/honda/prologue"},
+{n:"EV6",b:"Kia",t:"EV",r:2,price:472,disp:"$472",est:0,cargo:50.2,cEst:1,cheapr:1,st:"now",u:"https://www.kia.com/us/en/ev6",cd:9.5,cds:"exact",cdu:"https://www.caranddriver.com/kia/ev6"},
+{n:"Ioniq 9",b:"Hyundai",t:"EV",r:3,price:500,disp:"$500",est:0,cargo:86.9,cEst:0,cheapr:0,st:"now",u:"https://www.hyundaiusa.com/us/en/vehicles/ioniq-9",cd:9.5,cds:"exact",cdu:"https://www.caranddriver.com/hyundai/ioniq-9"},
+{n:"bZ",b:"Toyota",t:"EV",r:2,price:472,disp:"$472",est:0,cargo:56,cEst:1,cheapr:1,st:"now",u:"https://www.toyota.com/bz/",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/toyota/bz"},
+{n:"Bolt",b:"Chevrolet",t:"EV",r:2,price:547,disp:"$547",est:0,cargo:57,cEst:1,cheapr:0,st:"now",u:"https://www.chevrolet.com/electric/bolt-ev",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/chevrolet/bolt-ev"},
+{n:"Uncharted",b:"Subaru",t:"EV",r:2,price:503,disp:"$503",est:0,cargo:54,cEst:1,cheapr:0,st:"now",u:"https://www.subaru.com/vehicles/uncharted",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/subaru/uncharted"},
+{n:"Solterra",b:"Subaru",t:"EV",r:2,price:500,disp:"$500",est:0,cargo:63.5,cEst:1,cheapr:1,st:"now",u:"https://www.subaru.com/vehicles/solterra",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/subaru/solterra"},
+{n:"Trailseeker",b:"Subaru",t:"EV",r:2,price:511,disp:"$511",est:0,cargo:65,cEst:1,cheapr:0,st:"now",u:"https://www.subaru.com/vehicles/trailseeker",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/subaru/trailseeker"},
+{n:"Optiq",b:"Cadillac",t:"EV",r:2,price:555,disp:"$480–640",est:1,cargo:57,cEst:1,cheapr:0,st:"now",u:"https://www.cadillac.com/electric/optiq",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/cadillac/optiq"},
+{n:"EV9",b:"Kia",t:"EV",r:3,price:567,disp:"$567",est:0,cargo:81.7,cEst:1,cheapr:0,st:"now",u:"https://www.kia.com/us/en/ev9",cd:10,cds:"exact",cdu:"https://www.caranddriver.com/kia/ev9"},
+{n:"bZ Woodland",b:"Toyota",t:"EV",r:2,price:601,disp:"$601",est:0,cargo:66,cEst:1,cheapr:0,st:"now",u:"https://www.toyota.com/bzwoodland/",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/toyota/bz-woodland"},
+{n:"C-HR",b:"Toyota",t:"EV",r:2,price:516,disp:"$516",est:0,cargo:44,cEst:1,cheapr:0,st:"now",u:"https://www.toyota.com/chr/",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/toyota/c-hr"},
+{n:"Model Y",b:"Tesla",t:"EV",r:2,price:585,disp:"$585",est:0,cargo:72,cEst:1,cheapr:1,st:"now",u:"https://www.tesla.com/modely",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/tesla/model-y"},
+{n:"Mustang Mach-E",b:"Ford",t:"EV",r:2,price:591,disp:"$591",est:0,cargo:59.7,cEst:1,cheapr:1,st:"now",u:"https://www.ford.com/suvs/mach-e/",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/ford/mustang-mach-e"},
+{n:"Leaf SV+",b:"Nissan",t:"EV",r:2,price:598,disp:"$598",est:0,cargo:55,cEst:1,cheapr:1,st:"now",u:"https://www.nissanusa.com/vehicles/electric-cars/leaf.html",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/nissan/leaf"},
+{n:"EX30",b:"Volvo",t:"EV",r:2,price:536,disp:"$536",est:0,cargo:31.9,cEst:1,cheapr:1,st:"now",u:"https://www.volvocars.com/us/cars/ex30-electric/",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/volvo/ex30"},
+{n:"Q4 e-tron",b:"Audi",t:"EV",r:2,price:670,disp:"$605–745",est:1,cargo:53,cEst:1,cheapr:1,st:"now",u:"https://www.audiusa.com/us/web/en/models/q4-e-tron/",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/audi/q4-e-tron"},
+{n:"Equinox EV",b:"Chevrolet",t:"EV",r:2,price:746,disp:"$746",est:0,cargo:57.2,cEst:1,cheapr:1,st:"now",u:"https://www.chevrolet.com/electric/equinox-ev",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/chevrolet/equinox-ev"},
+{n:"Blazer EV",b:"Chevrolet",t:"EV",r:2,price:594,disp:"$594",est:0,cargo:59.1,cEst:0,cheapr:1,st:"now",u:"https://www.chevrolet.com/electric/blazer-ev",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/chevrolet/blazer-ev"},
+{n:"Countryman SE ALL4",b:"Mini",t:"EV",r:2,price:697,disp:"$697",est:0,cargo:56,cEst:0,cheapr:1,st:"now",u:"https://www.miniusa.com/model/countryman.html",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/mini/countryman-electric"},
+{n:"EX40",b:"Volvo",t:"EV",r:2,price:713,disp:"$713",est:0,cargo:57.5,cEst:0,cheapr:0,st:"now",u:"https://www.volvocars.com/us/cars/ex40-electric/",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/volvo/ex40"},
+{n:"RZ 350e",b:"Lexus",t:"EV",r:2,price:651,disp:"$651",est:0,cargo:51,cEst:1,cheapr:0.5,st:"now",u:"https://www.lexus.com/models/RZ",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/lexus/rz"},
+{n:"GV60",b:"Genesis",t:"EV",r:2,price:844,disp:"$844",est:0,cargo:54.7,cEst:1,cheapr:0,st:"now",u:"https://www.genesis.com/us/en/gv60.html",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/genesis/gv60"},
+{n:"Polestar 4",b:"Polestar",t:"EV",r:2,price:588,disp:"$588",est:0,cargo:54.2,cEst:0,cheapr:0,st:"now",u:"https://www.polestar.com/us/polestar-4/",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/polestar/polestar-4"},
+{n:"Polestar 3",b:"Polestar",t:"EV",r:2,price:795,disp:"$795",est:0,cargo:49.8,cEst:1,cheapr:0,st:"now",u:"https://www.polestar.com/us/polestar-3/",cd:8.5,cds:"nameplate",cdu:"https://www.caranddriver.com/polestar/polestar-3"},
+{n:"Lyriq",b:"Cadillac",t:"EV",r:2,price:708,disp:"$708",est:0,cargo:60.8,cEst:1,cheapr:0,st:"now",u:"https://www.cadillac.com/electric/lyriq",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/cadillac/lyriq"},
+{n:"Kona Electric",b:"Hyundai",t:"EV",r:2,price:893,disp:"$893",est:0,cargo:45.8,cEst:1,cheapr:1,st:"now",u:"https://www.hyundaiusa.com/us/en/vehicles/kona-electric",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/hyundai/kona-electric"},
+{n:"Electrified GV70",b:"Genesis",t:"EV",r:2,price:862,disp:"$862",est:0,cargo:56.9,cEst:1,cheapr:0,st:"now",u:"https://www.genesis.com/us/en/electrified-gv70.html",cd:8.5,cds:"nameplate",cdu:"https://www.caranddriver.com/genesis/electrified-gv70"},
+{n:"EQE SUV",b:"Mercedes-Benz",t:"EV",r:2,price:1047,disp:"$1,047",est:0,cargo:74,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/eqe/suv",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/mercedes-benz/eqe-suv"},
+{n:"Vistiq",b:"Cadillac",t:"EV",r:3,price:906,disp:"$906",est:0,cargo:80,cEst:1,cheapr:0,st:"now",u:"https://www.cadillac.com/electric/vistiq",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/cadillac/vistiq"},
+{n:"EX90",b:"Volvo",t:"EV",r:3,price:964,disp:"$964",est:0,cargo:74.3,cEst:1,cheapr:0,st:"now",u:"https://www.volvocars.com/us/cars/ex90-electric/",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/volvo/ex90"},
+{n:"iX",b:"BMW",t:"EV",r:2,price:941,disp:"$941",est:0,cargo:77.9,cEst:1,cheapr:0,st:"now",u:"https://www.bmwusa.com/vehicles/bmwi/ix/sports-activity-vehicle.html",cd:9.5,cds:"exact",cdu:"https://www.caranddriver.com/bmw/ix"},
+{n:"R2 Performance",b:"Rivian",t:"EV",r:2,price:1007,disp:"$1,007",est:0,cargo:66,cEst:1,cheapr:0,st:"now",u:"https://rivian.com/r2",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/rivian/r2"},
+{n:"Gravity",b:"Lucid",t:"EV",r:3,price:1273,disp:"$1,273",est:0,cargo:112,cEst:1,cheapr:0,st:"now",u:"https://lucidmotors.com/gravity",cd:10,cds:"exact",cdu:"https://www.caranddriver.com/lucid/gravity"},
+{n:"Q6 e-tron",b:"Audi",t:"EV",r:2,price:999,disp:"$999",est:0,cargo:51.4,cEst:1,cheapr:0,st:"now",u:"https://www.audiusa.com/us/web/en/models/q6-e-tron/",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/audi/q6-e-tron"},
+{n:"R1S",b:"Rivian",t:"EV",r:3,price:1385,disp:"$1,385",est:0,cargo:104,cEst:1,cheapr:0,st:"now",u:"https://rivian.com/r1s",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/rivian/r1s"},
+{n:"Macan Electric",b:"Porsche",t:"EV",r:2,price:1437,disp:"$1,437",est:0,cargo:53,cEst:1,cheapr:0,st:"now",u:"https://www.porsche.com/usa/models/macan/",cd:10,cds:"nameplate",cdu:"https://www.caranddriver.com/porsche/macan"},
+{n:"EQS SUV",b:"Mercedes-Benz",t:"EV",r:3,price:1463,disp:"$1,463",est:0,cargo:74,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/eqs/suv",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/mercedes-benz/eqs-suv"},
+{n:"Hummer EV SUV",b:"GMC",t:"EV",r:2,price:1511,disp:"$1,511",est:0,cargo:81.5,cEst:1,cheapr:0,st:"now",u:"https://www.gmc.com/electric/hummer-ev/suv",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/gmc/hummer-ev-suv"},
+{n:"Escalade IQ / IQL",b:"Cadillac",t:"EV",r:3,price:2295,disp:"$2,295",est:0,cargo:120,cEst:1,cheapr:0,st:"now",u:"https://www.cadillac.com/electric/escalade-iq",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/cadillac/escalade-iq"},
+{n:"G 580 EQ",b:"Mercedes-Benz",t:"EV",r:2,price:2314,disp:"$2,314",est:0,cargo:70,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/g-class/suv",cd:9,cds:"nameplate",cdu:"https://www.caranddriver.com/mercedes-benz/g-class"},
 
 /* ===== EV — clearance / carryover ===== */
-{n:"ID.4",b:"Volkswagen",t:"EV",r:2,price:315,disp:"$250–380",est:1,cargo:64.2,cEst:0,cheapr:1,st:"clear",u:"https://www.vw.com/en/models/id-4.html",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/volkswagen/id4"},
-{n:"Wagoneer S ('25 stock)",b:"Jeep",t:"EV",r:2,price:550,disp:"$450–650",est:1,cargo:61,cEst:1,cheapr:0,st:"clear",u:"https://www.jeep.com/wagoneer-s.html",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/jeep/wagoneer-s"},
-{n:"ID. Buzz (2027)",b:"Volkswagen",t:"EV",r:3,price:700,disp:"$600–800",est:1,cargo:145,cEst:1,cheapr:0,st:"clear",u:"https://www.vw.com/en/models/id-buzz.html",cd:10,cds:"nameplate",cdu:"https://www.caranddriver.com/volkswagen/id-buzz-microbus"},
+{n:"ID.4",b:"Volkswagen",t:"EV",r:2,price:795,disp:"$795",est:0,cargo:64.2,cEst:0,cheapr:1,st:"clear",u:"https://www.vw.com/en/models/id-4.html",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/volkswagen/id4"},
+{n:"Wagoneer S ('25 stock)",b:"Jeep",t:"EV",r:2,price:727,disp:"$727",est:0,cargo:61,cEst:1,cheapr:0,st:"clear",u:"https://www.jeep.com/wagoneer-s.html",cd:7.5,cds:"exact",cdu:"https://www.caranddriver.com/jeep/wagoneer-s"},
+{n:"ID. Buzz (2027)",b:"Volkswagen",t:"EV",r:3,price:773,disp:"$773",est:0,cargo:145,cEst:1,cheapr:0,st:"clear",u:"https://www.vw.com/en/models/id-buzz.html",cd:10,cds:"nameplate",cdu:"https://www.caranddriver.com/volkswagen/id-buzz-microbus"},
 
 /* ===== EV — arriving fall 2026 ===== */
-{n:"Eclipse Sportback EV",b:"Mitsubishi",t:"EV",r:2,price:380,disp:"$330–430",est:1,cargo:50,cEst:1,cheapr:0,st:"fall",u:"https://www.mitsubishicars.com/",cd:null},
-{n:"EV3",b:"Kia",t:"EV",r:2,price:410,disp:"$350–470",est:1,cargo:44,cEst:1,cheapr:0,st:"fall",u:"https://www.kia.com/us/en/future-vehicle",cd:null},
-{n:"GLB Electric",b:"Mercedes-Benz",t:"EV",r:3,price:625,disp:"$550–700",est:1,cargo:70,cEst:1,cheapr:0,st:"fall",u:"https://www.mbusa.com/en/vehicles/class/glb/suv",cd:null},
-{n:"Highlander EV",b:"Toyota",t:"EV",r:3,price:680,disp:"$600–760",est:1,cargo:80,cEst:1,cheapr:0,st:"fall",u:"https://www.toyota.com/upcoming-vehicles/",cd:null},
-{n:"Getaway",b:"Subaru",t:"EV",r:3,price:680,disp:"$600–760",est:1,cargo:80,cEst:1,cheapr:0,st:"fall",u:"https://www.subaru.com/vehicles.html",cd:null},
-{n:"EX60",b:"Volvo",t:"EV",r:2,price:735,disp:"$650–820",est:1,cargo:60,cEst:1,cheapr:0,st:"fall",u:"https://www.volvocars.com/us/cars/ex60-electric/",cd:9.5,cds:"exact",cdu:"https://www.caranddriver.com/volvo/ex60"},
-{n:"iX3 50 xDrive",b:"BMW",t:"EV",r:2,price:750,disp:"$650–850",est:1,cargo:65,cEst:1,cheapr:0,st:"fall",u:"https://www.bmwusa.com/vehicles/bmwi/ix3.html",cd:9.5,cds:"exact",cdu:"https://www.caranddriver.com/bmw/ix3"},
-{n:"Recon",b:"Jeep",t:"EV",r:2,price:760,disp:"$620–900",est:1,cargo:65,cEst:1,cheapr:0,st:"fall",u:"https://www.jeep.com/recon.html",cd:null},
-{n:"GLC Electric",b:"Mercedes-Benz",t:"EV",r:2,price:780,disp:"$690–870",est:1,cargo:65,cEst:1,cheapr:0,st:"fall",u:"https://www.mbusa.com/en/vehicles/class/glc/suv",cd:null},
-{n:"TZ",b:"Lexus",t:"EV",r:3,price:845,disp:"$750–940",est:1,cargo:80,cEst:1,cheapr:0,st:"fall",u:"https://www.lexus.com/future-vehicles",cd:null},
-{n:"iX5 60 xDrive",b:"BMW",t:"EV",r:2,price:1040,disp:"$920–1,160",est:1,cargo:72,cEst:1,cheapr:0,st:"fall",u:"https://www.bmwusa.com/vehicles/x-models/x5/sports-activity-vehicle.html",cd:null},
-{n:"GV90",b:"Genesis",t:"EV",r:3,price:1275,disp:"$1,100–1,450",est:1,cargo:90,cEst:1,cheapr:0,st:"fall",u:"https://www.genesis.com/us/en/genesis.html",cd:null},
-{n:"Range Rover Sport Electric",b:"Land Rover",t:"EV",r:2,price:1400,disp:"$1,250–1,550",est:1,cargo:70,cEst:1,cheapr:0,st:"fall",u:"https://www.landroverusa.com/vehicles/range-rover-sport/index.html",cd:null},
-{n:"Cayenne Electric",b:"Porsche",t:"EV",r:2,price:1500,disp:"$1,350–1,650",est:1,cargo:85,cEst:1,cheapr:0,st:"fall",u:"https://www.porsche.com/usa/models/cayenne/",cd:null},
-{n:"Cayenne Coupe Electric",b:"Porsche",t:"EV",r:2,price:1560,disp:"$1,400–1,720",est:1,cargo:75,cEst:1,cheapr:0,st:"fall",u:"https://www.porsche.com/usa/models/cayenne/",cd:null},
-{n:"Range Rover Electric",b:"Land Rover",t:"EV",r:2,price:1675,disp:"$1,500–1,850",est:1,cargo:85,cEst:1,cheapr:0,st:"fall",u:"https://www.landroverusa.com/vehicles/range-rover/index.html",cd:null},
-{n:"Type 01",b:"Jaguar",t:"EV",r:2,price:1850,disp:"$1,650–2,050",est:1,cargo:45,cEst:1,cheapr:0,st:"fall",u:"https://www.jaguarusa.com/",cd:null},
+{n:"Eclipse Sportback EV",b:"Mitsubishi",t:"EV",r:2,price:512,disp:"$430–560",est:1,cargo:50,cEst:1,cheapr:0,st:"fall",u:"https://www.mitsubishicars.com/",cd:null},
+{n:"EV3",b:"Kia",t:"EV",r:2,price:493,disp:"$450–570",est:1,cargo:44,cEst:1,cheapr:0,st:"fall",u:"https://www.kia.com/us/en/future-vehicle",cd:null},
+{n:"GLB Electric",b:"Mercedes-Benz",t:"EV",r:3,price:810,disp:"$675–891",est:1,cargo:70,cEst:1,cheapr:0,st:"fall",u:"https://www.mbusa.com/en/vehicles/class/glb/suv",cd:null},
+{n:"Highlander EV",b:"Toyota",t:"EV",r:3,price:740,disp:"$713–941",est:1,cargo:80,cEst:1,cheapr:0,st:"later",u:"https://www.toyota.com/upcoming-vehicles/",cd:null},
+{n:"Getaway",b:"Subaru",t:"EV",r:3,price:755,disp:"$700–924",est:1,cargo:80,cEst:1,cheapr:0,st:"later",u:"https://www.subaru.com/vehicles.html",cd:null},
+{n:"EX60",b:"Volvo",t:"EV",r:2,price:827,disp:"$827",est:0,cargo:60,cEst:1,cheapr:0,st:"fall",u:"https://www.volvocars.com/us/cars/ex60-electric/",cd:9.5,cds:"exact",cdu:"https://www.caranddriver.com/volvo/ex60"},
+{n:"iX3 50 xDrive",b:"BMW",t:"EV",r:2,price:943,disp:"$786–1,037",est:1,cargo:65,cEst:1,cheapr:0,st:"fall",u:"https://www.bmwusa.com/vehicles/bmwi/ix3.html",cd:9.5,cds:"exact",cdu:"https://www.caranddriver.com/bmw/ix3"},
+{n:"Recon",b:"Jeep",t:"EV",r:2,price:1069,disp:"$862–1,138",est:1,cargo:65,cEst:1,cheapr:0,st:"fall",u:"https://www.jeep.com/recon.html",cd:null},
+{n:"GLC Electric",b:"Mercedes-Benz",t:"EV",r:2,price:990,disp:"$825–1,089",est:1,cargo:65,cEst:1,cheapr:0,st:"fall",u:"https://www.mbusa.com/en/vehicles/class/glc/suv",cd:null},
+{n:"TZ",b:"Lexus",t:"EV",r:3,price:1015,disp:"$875–1,155",est:1,cargo:80,cEst:1,cheapr:0,st:"later",u:"https://www.lexus.com/future-vehicles",cd:null},
+{n:"iX5 60 xDrive",b:"BMW",t:"EV",r:2,price:1300,disp:"$1,016–1,341",est:1,cargo:72,cEst:1,cheapr:0,st:"later",u:"https://www.bmwusa.com/vehicles/x-models/x5/sports-activity-vehicle.html",cd:null},
+{n:"GV90",b:"Genesis",t:"EV",r:3,price:1550,disp:"$1,250–1,650",est:1,cargo:90,cEst:1,cheapr:0,st:"later",u:"https://www.genesis.com/us/en/genesis.html",cd:null},
+{n:"Range Rover Sport Electric",b:"Land Rover",t:"EV",r:2,price:1550,disp:"$1,250–1,650",est:1,cargo:70,cEst:1,cheapr:0,st:"later",u:"https://www.landroverusa.com/vehicles/range-rover-sport/index.html",cd:null},
+{n:"Cayenne Electric",b:"Porsche",t:"EV",r:2,price:1615,disp:"$1,392–1,837",est:1,cargo:85,cEst:1,cheapr:0,st:"fall",u:"https://www.porsche.com/usa/models/cayenne/",cd:null},
+{n:"Cayenne Coupe Electric",b:"Porsche",t:"EV",r:2,price:1684,disp:"$1,452–1,917",est:1,cargo:75,cEst:1,cheapr:0,st:"fall",u:"https://www.porsche.com/usa/models/cayenne/",cd:null},
+{n:"Range Rover Electric",b:"Land Rover",t:"EV",r:2,price:2480,disp:"$1,938–2,700",est:1,cargo:85,cEst:1,cheapr:0,st:"later",u:"https://www.landroverusa.com/vehicles/range-rover/index.html",cd:null},
+{n:"Type 01",b:"Jaguar",t:"EV",r:2,price:2200,disp:"$1,625–2,400",est:1,cargo:45,cEst:1,cheapr:0,st:"later",u:"https://www.jaguarusa.com/",cd:null},
 
 /* ===== PHEV — available now ===== */
-{n:"CX-70 PHEV",b:"Mazda",t:"PHEV",r:2,price:249,disp:"$249 · $7,789 down",est:0,ev:26,cargo:75,cEst:1,cheapr:0,st:"now",u:"https://www.mazdausa.com/vehicles/cx-70-phev",cd:8.5,cds:"nameplate",cdu:"https://www.caranddriver.com/mazda/cx-70"},
-{n:"CX-90 PHEV",b:"Mazda",t:"PHEV",r:3,price:299,disp:"$299 · $8,989 down",est:0,ev:26,cargo:74.2,cEst:1,cheapr:1,st:"now",u:"https://www.mazdausa.com/vehicles/cx-90-phev",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/mazda/cx-90"},
-{n:"Sportage PHEV",b:"Kia",t:"PHEV",r:2,price:315,disp:"~$300–330",est:1,ev:33,cargo:70,cEst:1,cheapr:1,st:"now",u:"https://www.kia.com/us/en/sportage-plug-in-hybrid",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/kia/sportage"},
-{n:"Tucson PHEV",b:"Hyundai",t:"PHEV",r:2,price:329,disp:"$329 · eff. $440",est:0,ev:33,cargo:66.3,cEst:1,cheapr:1,st:"now",u:"https://www.hyundaiusa.com/us/en/vehicles/tucson-plug-in-hybrid",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/hyundai/tucson"},
-{n:"Escape PHEV",b:"Ford",t:"PHEV",r:2,price:362,disp:"$362",est:0,ev:37,cargo:60.8,cEst:1,cheapr:1,st:"now",u:"https://www.ford.com/suvs/escape/",cd:7.5,cds:"nameplate",cdu:"https://www.caranddriver.com/ford/escape"},
-{n:"Sorento PHEV",b:"Kia",t:"PHEV",r:3,price:445,disp:"~$430–460",est:1,ev:32,cargo:75,cEst:1,cheapr:1,st:"now",u:"https://www.kia.com/us/en/sorento-plug-in-hybrid",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/kia/sorento"},
-{n:"Outlander PHEV",b:"Mitsubishi",t:"PHEV",r:3,price:465,disp:"~$450–480",est:1,ev:38,cargo:64.3,cEst:1,cheapr:1,st:"now",u:"https://www.mitsubishicars.com/cars/outlander-phev",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/mitsubishi/outlander"},
-{n:"Rogue PHEV",b:"Nissan",t:"PHEV",r:2,price:519,disp:"$519",est:0,ev:38,cargo:70,cEst:1,cheapr:0,st:"now",u:"https://www.nissanusa.com/vehicles/crossovers-suvs/rogue-plug-in-hybrid.html",cd:7.5,cds:"nameplate",cdu:"https://www.caranddriver.com/nissan/rogue"},
-{n:"NX 450h+",b:"Lexus",t:"PHEV",r:2,price:529,disp:"$529",est:0,ev:37,cargo:46.9,cEst:1,cheapr:0,st:"now",u:"https://www.lexus.com/models/NX-hybrid",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/lexus/nx"},
-{n:"RAV4 PHEV",b:"Toyota",t:"PHEV",r:2,price:560,disp:"$500–620",est:1,ev:50,cargo:69.8,cEst:1,cheapr:1,st:"now",u:"https://www.toyota.com/rav4plugin/",cd:8.5,cds:"nameplate",cdu:"https://www.caranddriver.com/toyota/rav4"},
-{n:"Corsair PHEV",b:"Lincoln",t:"PHEV",r:2,price:575,disp:"$500–650",est:1,ev:28,cargo:57.6,cEst:1,cheapr:0,st:"now",u:"https://www.lincoln.com/luxury-suvs/corsair/",cd:6.5,cds:"exact",cdu:"https://www.caranddriver.com/lincoln/corsair"},
-{n:"X3 30e xDrive",b:"BMW",t:"PHEV",r:2,price:660,disp:"$600–720",est:1,ev:30,cargo:67.1,cEst:1,cheapr:0.5,st:"now",u:"https://www.bmwusa.com/vehicles/x-models/x3/sports-activity-vehicle.html",cd:9,cds:"nameplate",cdu:"https://www.caranddriver.com/bmw/x3"},
-{n:"RX 450h+",b:"Lexus",t:"PHEV",r:2,price:699,disp:"$699",est:0,ev:37,cargo:46.2,cEst:1,cheapr:0,st:"now",u:"https://www.lexus.com/models/RX-hybrid",cd:7,cds:"nameplate",cdu:"https://www.caranddriver.com/lexus/rx"},
-{n:"XC60 PHEV",b:"Volvo",t:"PHEV",r:2,price:715,disp:"$650–780",est:1,ev:35,cargo:63.3,cEst:1,cheapr:0,st:"now",u:"https://www.volvocars.com/us/cars/xc60-plugin-hybrid/",cd:9,cds:"nameplate",cdu:"https://www.caranddriver.com/volvo/xc60"},
-{n:"Q5 PHEV",b:"Audi",t:"PHEV",r:2,price:725,disp:"$650–800",est:1,ev:26,cargo:54,cEst:1,cheapr:0,st:"now",u:"https://www.audiusa.com/us/web/en/models/q5/",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/audi/q5"},
-{n:"GLC 350e",b:"Mercedes-Benz",t:"PHEV",r:2,price:775,disp:"$700–850",est:1,ev:54,cargo:56.3,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/glc/suv",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/mercedes-benz/glc-class"},
-{n:"XC90 PHEV",b:"Volvo",t:"PHEV",r:3,price:875,disp:"$800–950",est:1,ev:32,cargo:85.7,cEst:1,cheapr:0,st:"now",u:"https://www.volvocars.com/us/cars/xc90-plugin-hybrid/",cd:9.5,cds:"nameplate",cdu:"https://www.caranddriver.com/volvo/xc90"},
-{n:"X5 xDrive50e",b:"BMW",t:"PHEV",r:2,price:929,disp:"$929 · 39mo",est:0,ev:40,cargo:72.3,cEst:1,cheapr:0,st:"now",u:"https://www.bmwusa.com/vehicles/x-models/x5/sports-activity-vehicle.html",cd:9.5,cds:"nameplate",cdu:"https://www.caranddriver.com/bmw/x5"},
-{n:"GLE 450e",b:"Mercedes-Benz",t:"PHEV",r:2,price:975,disp:"$900–1,050",est:1,ev:48,cargo:74.9,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/gle/suv",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/mercedes-benz/gle-class"},
-{n:"Defender PHEV",b:"Land Rover",t:"PHEV",r:2,price:1000,disp:"$900–1,100",est:1,ev:48,cargo:78,cEst:1,cheapr:0,st:"now",u:"https://www.landroverusa.com/vehicles/defender/index.html",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/land-rover/defender"},
-{n:"TX 550h+",b:"Lexus",t:"PHEV",r:3,price:999,disp:"$999",est:0,ev:33,cargo:97,cEst:1,cheapr:0,st:"now",u:"https://www.lexus.com/models/TX",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/lexus/tx"},
-{n:"Cayenne E-Hybrid",b:"Porsche",t:"PHEV",r:2,price:1275,disp:"$1,150–1,400",est:1,ev:40,cargo:60,cEst:1,cheapr:0,st:"now",u:"https://www.porsche.com/usa/models/cayenne/",cd:9.5,cds:"nameplate",cdu:"https://www.caranddriver.com/porsche/cayenne"},
-{n:"Range Rover Sport PHEV",b:"Land Rover",t:"PHEV",r:2,price:1325,disp:"$1,200–1,450",est:1,ev:51,cargo:70,cEst:1,cheapr:0,st:"now",u:"https://www.landroverusa.com/vehicles/range-rover-sport/index.html",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/land-rover/range-rover-sport"},
-{n:"Range Rover PHEV",b:"Land Rover",t:"PHEV",r:2,price:1775,disp:"$1,600–1,950",est:1,ev:51,cargo:70,cEst:1,cheapr:0,st:"now",u:"https://www.landroverusa.com/vehicles/range-rover/index.html",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/land-rover/range-rover"},
-{n:"Bentayga PHEV",b:"Bentley",t:"PHEV",r:2,price:2750,disp:"$2,500–3,000",est:1,ev:27,cargo:46,cEst:1,cheapr:0,st:"now",u:"https://www.bentleymotors.com/en/models/bentayga.html",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/bentley/bentayga"},
-{n:"Urus SE",b:"Lamborghini",t:"PHEV",r:2,price:3300,disp:"$3,000–3,600",est:1,ev:37,cargo:56,cEst:1,cheapr:0,st:"now",u:"https://www.lamborghini.com/en-en/models/urus",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/lamborghini/urus"},
+{n:"CX-70 PHEV",b:"Mazda",t:"PHEV",r:2,price:460,disp:"$460",est:0,ev:26,cargo:75,cEst:1,cheapr:0,st:"now",u:"https://www.mazdausa.com/vehicles/cx-70-phev",cd:8.5,cds:"nameplate",cdu:"https://www.caranddriver.com/mazda/cx-70"},
+{n:"CX-90 PHEV",b:"Mazda",t:"PHEV",r:3,price:575,disp:"$575",est:0,ev:26,cargo:74.2,cEst:1,cheapr:1,st:"now",u:"https://www.mazdausa.com/vehicles/cx-90-phev",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/mazda/cx-90"},
+{n:"Sportage PHEV",b:"Kia",t:"PHEV",r:2,price:435,disp:"$435",est:0,ev:33,cargo:70,cEst:1,cheapr:1,st:"now",u:"https://www.kia.com/us/en/sportage-plug-in-hybrid",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/kia/sportage"},
+{n:"Tucson PHEV",b:"Hyundai",t:"PHEV",r:2,price:454,disp:"$454",est:0,ev:33,cargo:66.3,cEst:1,cheapr:1,st:"now",u:"https://www.hyundaiusa.com/us/en/vehicles/tucson-plug-in-hybrid",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/hyundai/tucson"},
+{n:"Escape PHEV",b:"Ford",t:"PHEV",r:2,price:560,disp:"$480–640",est:1,ev:37,cargo:60.8,cEst:1,cheapr:1,st:"now",u:"https://www.ford.com/suvs/escape/",cd:7.5,cds:"nameplate",cdu:"https://www.caranddriver.com/ford/escape"},
+{n:"Sorento PHEV",b:"Kia",t:"PHEV",r:3,price:592,disp:"$592",est:0,ev:32,cargo:75,cEst:1,cheapr:1,st:"now",u:"https://www.kia.com/us/en/sorento-plug-in-hybrid",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/kia/sorento"},
+{n:"Outlander PHEV",b:"Mitsubishi",t:"PHEV",r:3,price:656,disp:"$656",est:0,ev:38,cargo:64.3,cEst:1,cheapr:1,st:"now",u:"https://www.mitsubishicars.com/cars/outlander-phev",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/mitsubishi/outlander"},
+{n:"Rogue PHEV",b:"Nissan",t:"PHEV",r:2,price:660,disp:"$660",est:0,ev:38,cargo:70,cEst:1,cheapr:0,st:"now",u:"https://www.nissanusa.com/vehicles/crossovers-suvs/rogue-plug-in-hybrid.html",cd:7.5,cds:"nameplate",cdu:"https://www.caranddriver.com/nissan/rogue"},
+{n:"NX 450h+",b:"Lexus",t:"PHEV",r:2,price:733,disp:"$733",est:0,ev:37,cargo:46.9,cEst:1,cheapr:0,st:"now",u:"https://www.lexus.com/models/NX-hybrid",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/lexus/nx"},
+{n:"RAV4 PHEV",b:"Toyota",t:"PHEV",r:2,price:618,disp:"$580–680",est:1,ev:50,cargo:69.8,cEst:1,cheapr:1,st:"now",u:"https://www.toyota.com/rav4plugin/",cd:8.5,cds:"nameplate",cdu:"https://www.caranddriver.com/toyota/rav4"},
+{n:"Corsair PHEV",b:"Lincoln",t:"PHEV",r:2,price:866,disp:"$800–930",est:1,ev:28,cargo:57.6,cEst:1,cheapr:0,st:"now",u:"https://www.lincoln.com/luxury-suvs/corsair/",cd:6.5,cds:"exact",cdu:"https://www.caranddriver.com/lincoln/corsair"},
+{n:"X3 30e xDrive",b:"BMW",t:"PHEV",r:2,price:837,disp:"$780–900",est:1,ev:30,cargo:67.1,cEst:1,cheapr:0.5,st:"now",u:"https://www.bmwusa.com/vehicles/x-models/x3/sports-activity-vehicle.html",cd:9,cds:"nameplate",cdu:"https://www.caranddriver.com/bmw/x3"},
+{n:"RX 450h+",b:"Lexus",t:"PHEV",r:2,price:892,disp:"$892",est:0,ev:37,cargo:46.2,cEst:1,cheapr:0,st:"now",u:"https://www.lexus.com/models/RX-hybrid",cd:7,cds:"nameplate",cdu:"https://www.caranddriver.com/lexus/rx"},
+{n:"XC60 PHEV",b:"Volvo",t:"PHEV",r:2,price:852,disp:"$852",est:0,ev:35,cargo:63.3,cEst:1,cheapr:0,st:"now",u:"https://www.volvocars.com/us/cars/xc60-plugin-hybrid/",cd:9,cds:"nameplate",cdu:"https://www.caranddriver.com/volvo/xc60"},
+{n:"Q5 PHEV",b:"Audi",t:"PHEV",r:2,price:908,disp:"$850–970",est:1,ev:26,cargo:54,cEst:1,cheapr:0,st:"now",u:"https://www.audiusa.com/us/web/en/models/q5/",cd:8,cds:"nameplate",cdu:"https://www.caranddriver.com/audi/q5"},
+{n:"GLC 350e",b:"Mercedes-Benz",t:"PHEV",r:2,price:905,disp:"$850–960",est:1,ev:54,cargo:56.3,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/glc/suv",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/mercedes-benz/glc-class"},
+{n:"XC90 PHEV",b:"Volvo",t:"PHEV",r:3,price:968,disp:"$968",est:0,ev:32,cargo:85.7,cEst:1,cheapr:0,st:"now",u:"https://www.volvocars.com/us/cars/xc90-plugin-hybrid/",cd:9.5,cds:"nameplate",cdu:"https://www.caranddriver.com/volvo/xc90"},
+{n:"X5 xDrive50e",b:"BMW",t:"PHEV",r:2,price:1219,disp:"$1,219",est:0,ev:40,cargo:72.3,cEst:1,cheapr:0,st:"now",u:"https://www.bmwusa.com/vehicles/x-models/x5/sports-activity-vehicle.html",cd:9.5,cds:"nameplate",cdu:"https://www.caranddriver.com/bmw/x5"},
+{n:"GLE 450e",b:"Mercedes-Benz",t:"PHEV",r:2,price:1075,disp:"$970–1,180",est:1,ev:48,cargo:74.9,cEst:1,cheapr:0,st:"now",u:"https://www.mbusa.com/en/vehicles/class/gle/suv",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/mercedes-benz/gle-class"},
+{n:"Defender PHEV",b:"Land Rover",t:"PHEV",r:2,price:1200,disp:"$900–1,550",est:1,ev:48,cargo:78,cEst:1,cheapr:0,st:"now",u:"https://www.landroverusa.com/vehicles/defender/index.html",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/land-rover/defender"},
+{n:"TX 550h+",b:"Lexus",t:"PHEV",r:3,price:1238,disp:"$1,238",est:0,ev:33,cargo:97,cEst:1,cheapr:0,st:"now",u:"https://www.lexus.com/models/TX",cd:8.5,cds:"exact",cdu:"https://www.caranddriver.com/lexus/tx"},
+{n:"Cayenne E-Hybrid",b:"Porsche",t:"PHEV",r:2,price:1820,disp:"$1,820",est:0,ev:40,cargo:60,cEst:1,cheapr:0,st:"now",u:"https://www.porsche.com/usa/models/cayenne/",cd:9.5,cds:"nameplate",cdu:"https://www.caranddriver.com/porsche/cayenne"},
+{n:"Range Rover Sport PHEV",b:"Land Rover",t:"PHEV",r:2,price:1735,disp:"$1,650–1,830",est:1,ev:51,cargo:70,cEst:1,cheapr:0,st:"now",u:"https://www.landroverusa.com/vehicles/range-rover-sport/index.html",cd:8,cds:"exact",cdu:"https://www.caranddriver.com/land-rover/range-rover-sport"},
+{n:"Range Rover PHEV",b:"Land Rover",t:"PHEV",r:2,price:2946,disp:"$2,800–3,100",est:1,ev:51,cargo:70,cEst:1,cheapr:0,st:"now",u:"https://www.landroverusa.com/vehicles/range-rover/index.html",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/land-rover/range-rover"},
+{n:"Bentayga PHEV",b:"Bentley",t:"PHEV",r:2,price:4300,disp:"$3,500–5,200",est:1,ev:27,cargo:46,cEst:1,cheapr:0,st:"now",u:"https://www.bentleymotors.com/en/models/bentayga.html",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/bentley/bentayga"},
+{n:"Urus SE",b:"Lamborghini",t:"PHEV",r:2,price:4300,disp:"$3,800–5,200",est:1,ev:37,cargo:56,cEst:1,cheapr:0,st:"now",u:"https://www.lamborghini.com/en-en/models/urus",cd:9,cds:"exact",cdu:"https://www.caranddriver.com/lamborghini/urus"},
 
 /* ===== PHEV — arriving fall 2026 ===== */
-{n:"GLB PHEV",b:"Mercedes-Benz",t:"PHEV",r:3,price:655,disp:"$580–730",est:1,ev:null,cargo:70,cEst:1,cheapr:0,st:"fall",u:"https://www.mbusa.com/en/vehicles/class/glb/suv",cd:null},
-{n:"X5 50e (new gen)",b:"BMW",t:"PHEV",r:2,price:950,disp:"$850–1,050",est:1,ev:44,cargo:72,cEst:1,cheapr:0,st:"fall",u:"https://www.bmwusa.com/vehicles/x-models/x5/sports-activity-vehicle.html",cd:9.5,cds:"nameplate",cdu:"https://www.caranddriver.com/bmw/x5"}
+{n:"GLB PHEV",b:"Mercedes-Benz",t:"PHEV",r:3,price:790,disp:"$650–950",est:1,ev:null,cargo:70,cEst:1,cheapr:0,st:"fall",u:"https://www.mbusa.com/en/vehicles/class/glb/suv",cd:null},
+{n:"X5 50e (new gen)",b:"BMW",t:"PHEV",r:2,price:1160,disp:"$1,050–1,320",est:1,ev:44,cargo:72,cEst:1,cheapr:0,st:"later",u:"https://www.bmwusa.com/vehicles/x-models/x5/sports-activity-vehicle.html",cd:9.5,cds:"nameplate",cdu:"https://www.caranddriver.com/bmw/x5"}
 ];
 DATA.forEach((d,i)=>{ d.id = (d.b+"-"+d.n).toLowerCase().replace(/[^a-z0-9]+/g,"-"); d.i = i; });
 document.getElementById('statTotal').textContent = DATA.length;
 
 /* ---------- state ---------- */
-const F = { type:'all', status:'all', rows:'all', maxPrice:2000, minCargo:30, q:'', cheapr:false, star:false, showHidden:false };
+const F = { type:'all', status:'all', rows:'all', maxPrice:4500, minCargo:30, q:'', cheapr:false, star:false, showHidden:false };
 let sortKey='price', sortDir=1;
 
 /* ---------- render ---------- */
 const CARGO_MAX = 145;
-const STATUS_LABEL = { now:'Available now', fall:'Arriving fall', clear:'Clearance' };
+const STATUS_LABEL = { now:'Available now', fall:'Arriving fall', clear:'Clearance', later:'Not this fall' };
 
 function glyph(c){
   if(c >= 90) return {s:'▲▲', c:'up'};
@@ -610,7 +629,7 @@ seg('segType','type'); seg('segStatus','status'); seg('segRows','rows');
 
 document.getElementById('fPrice').addEventListener('input', e=>{
   F.maxPrice = +e.target.value;
-  document.getElementById('priceOut').textContent = F.maxPrice>=2000 ? 'any' : '≤ $'+F.maxPrice.toLocaleString();
+  document.getElementById('priceOut').textContent = F.maxPrice>=4500 ? 'any' : '≤ $'+F.maxPrice.toLocaleString();
   render();
 });
 document.getElementById('fCargo').addEventListener('input', e=>{
@@ -624,11 +643,11 @@ document.getElementById('fStar').addEventListener('change', e=>{ F.star=e.target
 document.getElementById('fHidden').addEventListener('change', e=>{ F.showHidden=e.target.checked; render(); });
 
 document.getElementById('btnReset').addEventListener('click', ()=>{
-  Object.assign(F,{type:'all',status:'all',rows:'all',maxPrice:2000,minCargo:30,q:'',cheapr:false,star:false,showHidden:false});
+  Object.assign(F,{type:'all',status:'all',rows:'all',maxPrice:4500,minCargo:30,q:'',cheapr:false,star:false,showHidden:false});
   ['segType','segStatus','segRows'].forEach(id=>{
     [...document.getElementById(id).children].forEach((b,i)=>b.setAttribute('aria-pressed', i===0));
   });
-  document.getElementById('fPrice').value=2000; document.getElementById('priceOut').textContent='any';
+  document.getElementById('fPrice').value=4500; document.getElementById('priceOut').textContent='any';
   document.getElementById('fCargo').value=30; document.getElementById('cargoOut').textContent='any';
   document.getElementById('fSearch').value='';
   document.getElementById('fCheapr').checked=false;
